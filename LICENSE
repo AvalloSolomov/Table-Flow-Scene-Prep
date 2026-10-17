@@ -1,21 +1,37 @@
-MIT License
+Table Flow - Scene Prep
+Copyright (c) 2026 Avallo. All rights reserved.
 
-Copyright (c) 2026 Avallo
+PERMISSION TO USE
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+You may install and use this module, unmodified, in any FoundryVTT world,
+including worlds used for commercial or paid games.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+RESTRICTIONS
+
+Without prior written permission from the copyright holder, you may not:
+
+1. modify, adapt, translate, or create derivative works of the module or any
+   part of it;
+2. redistribute, republish, sublicense, sell, or host copies of the module or
+   any part of it, in original or modified form, including in other modules,
+   packages, or repositories;
+3. remove or alter this license or any copyright notice.
+
+NOTES
+
+- Nothing in this license limits any rights that the GitHub Terms of Service
+  grant to users of GitHub, such as viewing and forking this repository
+  within GitHub.
+- Third-party names and assets referenced by this module remain the property
+  of their respective owners.
+
+NO WARRANTY
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM, OUT
+OF OR IN CONNECTION WITH THE SOFTWARE OR ITS USE.
+
+Versions released before this license was adopted (commit 284ffcc) were
+published under the MIT License and remain available under those terms.

@@ -128,7 +128,9 @@ All settings are accessible via the Settings view (header gear) in the GM interf
 
 ## License
 
-MIT License - Feel free to modify and distribute
+Copyright (c) 2026 Avallo. All rights reserved.
+
+You may install and use this module unmodified, including in commercial games. Modification and redistribution are not permitted without written permission. See [LICENSE](LICENSE) for the full terms.
 
 ## Support
 
