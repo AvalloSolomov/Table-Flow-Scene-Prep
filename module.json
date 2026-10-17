@@ -1,0 +1,34 @@
+{
+  "id": "table-flow-scene-prep",
+  "title": "Table Flow - Scene Prep",
+  "description": "Allows GMs to lock the game and show a lockout screen to players while preparing sessions",
+  "version": "2.0.1",
+  "compatibility": {
+    "minimum": "12",
+    "verified": "14.365"
+  },
+  "authors": [
+    {
+      "name": "Avallo"
+    }
+  ],
+  "scripts": [
+    "scripts/utils/dom-helpers.js",
+    "scripts/core/settings.js",
+    "scripts/core/socket-handler.js",
+    "scripts/ui/player-overlay.js",
+    "scripts/ui/floating-button.js",
+    "scripts/ui/gm-banner.js",
+    "scripts/ui/gm-interface.js",
+    "scripts/table-flow-scene-prep.js"
+  ],
+  "styles": [
+    "styles/table-flow-scene-prep.css"
+  ],
+  "socket": true,
+  "url": "",
+  "manifest": "",
+  "download": "",
+  "license": "MIT",
+  "readme": "README.md"
+}
