@@ -48,7 +48,9 @@ window.TableFlowScenePrep.GMInterface = class {
                 <div class="tfsp-header-content">
                     <div class="tfsp-header-left">
                         <div class="tfsp-header-icon">
-                            <img src="modules/table-flow-scene-prep/TABLEFLOW_LOGO.svg" alt="">
+                            <a class="tfsp-header-icon-link" href="https://tableflowapps.com" target="_blank" rel="noopener noreferrer" title="tableflowapps.com">
+                                <img src="modules/table-flow-scene-prep/TABLEFLOW_LOGO.svg" alt="Table Flow">
+                            </a>
                         </div>
                         <div>
                             <h2 class="tfsp-interface-title">Scene Prep</h2>
