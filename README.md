@@ -128,7 +128,7 @@ All settings are accessible via the Settings view (header gear) in the GM interf
 
 ## License
 
-Copyright (c) 2026 Avallo. All rights reserved.
+Copyright (c) 2026 Tableflow. All rights reserved.
 
 You may install and use this module unmodified, including in commercial games. Modification and redistribution are not permitted without written permission. See [LICENSE](LICENSE) for the full terms.
 
@@ -144,24 +144,4 @@ Before publishing an update, run the checklist in `RELEASE_CHECKLIST.md`.
 
 ### Version 2.0.1
 
-- Redesigned GM interface, lock banner, and player lock screen
-- Added lock-screen journal (published snapshot) and rotating tips
-- Added Lock Screen / General settings tabs
-- Removed animations for performance
-
-### Version 2.0.0
-
-- Refactored into modular scripts and styles
-- Added settings-based lock sync fallback for client reliability
-- Added late-join lock re-send on player connection
-- Added GM **Resync Lock Screens** action
-- Improved lock/unlock notifications with online player counts
-
-### Version 1.0.0
-
-- Initial release
-- Basic lockout functionality
-- GM control panel
-- Player lockout screen
-- Socket communication
-- Customizable settings
+- Initial public release
