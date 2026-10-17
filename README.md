@@ -43,16 +43,19 @@ A FoundryVTT module that lets the GM lock the session so players wait behind a l
 
 ## Installation
 
-1. Download or clone this module to your FoundryVTT modules directory
-2. Enable the module in your world's module settings
-3. Configure the module settings as desired
+1. In Foundry, open **Add-on Modules** and click **Install Module**.
+2. Paste this into the **Manifest URL** field and click **Install**:
+
+   `https://github.com/AvalloSolomov/Table-Flow-Scene-Prep/releases/latest/download/module.json`
+
+3. Enable **Table Flow - Scene Prep** in your world's module settings.
 
 ## Usage
 
 ### 60-Second Quick Start (GM)
 
 1. Open the floating control button.
-2. Set your lockout message in the **Custom Message** tab.
+2. Open **Settings** (gear icon) and set your lockout message on the **Lock Screen** tab.
 3. Click **Lock Session** in **Session Control**.
 4. Verify player count in the panel/banner.
 5. If any player reports no lock screen, click **Resync Lock Screens**.
@@ -134,11 +137,7 @@ You may install and use this module unmodified, including in commercial games. M
 
 ## Support
 
-For issues or feature requests, please create an issue in the repository or contact the module author.
-
-## Release Process
-
-Before publishing an update, run the checklist in `RELEASE_CHECKLIST.md`.
+For bug reports or feature requests, open an issue at https://github.com/AvalloSolomov/Table-Flow-Scene-Prep/issues.
 
 ## Changelog
 
