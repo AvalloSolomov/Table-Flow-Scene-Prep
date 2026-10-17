@@ -278,6 +278,12 @@
     object-fit: contain;
 }
 
+.tfsp-header-icon-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
 .tfsp-interface-title {
     font-family: var(--tfsp-font-sans) !important;
     margin: 0 0 2px 0;
