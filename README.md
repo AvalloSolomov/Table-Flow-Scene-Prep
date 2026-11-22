@@ -141,6 +141,10 @@ For bug reports or feature requests, open an issue at https://github.com/AvalloS
 
 ## Changelog
 
+### Version 2.1.0
+
+- Redesigned GM interface, player lock screen, and GM banner styling
+
 ### Version 2.0.1
 
 - Initial public release

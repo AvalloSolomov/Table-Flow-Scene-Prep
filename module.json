@@ -2,7 +2,7 @@
   "id": "table-flow-scene-prep",
   "title": "Table Flow - Scene Prep",
   "description": "Allows GMs to lock the game and show a lockout screen to players while preparing sessions",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "compatibility": {
     "minimum": "12",
     "verified": "14.365"
