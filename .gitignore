@@ -1,0 +1,5 @@
+.vscode/
+*.backup
+*.log
+.env*
+module.zip

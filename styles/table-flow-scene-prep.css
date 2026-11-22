@@ -1,0 +1,1875 @@
+/**
+ * Table Flow - Scene Prep Module Styles
+ * Organized modular CSS for all components
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Raleway:wght@400;500;600;700&display=swap');
+
+/* Lucide icons (ISC license, https://lucide.dev), drawn from icons/*.svg and tinted with currentColor */
+.tfsp-icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+    background-color: currentColor;
+    -webkit-mask: var(--tfsp-icon) center / contain no-repeat;
+    mask: var(--tfsp-icon) center / contain no-repeat;
+}
+
+.tfsp-icon-lock { --tfsp-icon: url('../icons/lock.svg'); }
+.tfsp-icon-lock-open { --tfsp-icon: url('../icons/lock-open.svg'); }
+.tfsp-icon-users { --tfsp-icon: url('../icons/users.svg'); }
+.tfsp-icon-clock { --tfsp-icon: url('../icons/clock.svg'); }
+.tfsp-icon-sliders-horizontal { --tfsp-icon: url('../icons/sliders-horizontal.svg'); }
+.tfsp-icon-book-open { --tfsp-icon: url('../icons/book-open.svg'); }
+.tfsp-icon-circle-dot { --tfsp-icon: url('../icons/circle-dot.svg'); }
+.tfsp-icon-flag { --tfsp-icon: url('../icons/flag.svg'); }
+.tfsp-icon-gauge { --tfsp-icon: url('../icons/gauge.svg'); }
+.tfsp-icon-lightbulb { --tfsp-icon: url('../icons/lightbulb.svg'); }
+.tfsp-icon-settings { --tfsp-icon: url('../icons/settings.svg'); }
+.tfsp-icon-arrow-left { --tfsp-icon: url('../icons/arrow-left.svg'); }
+
+:root {
+    --tfsp-bg-main: #171717;
+    --tfsp-bg-deep: #0c0e12;
+    --tfsp-bg-card: #101010;
+    --tfsp-bar: #121212;
+    --tfsp-border-subtle: #241f16;
+    --tfsp-border-light: #4a4230;
+    --tfsp-sage-primary: #9caf88;
+    --tfsp-sage-accent: #b8cba6;
+    --tfsp-blue-primary: #57b9ed;
+    --tfsp-blue-hover: #73c8f2;
+    --tfsp-blue-deep: #2f7cc4;
+    --tfsp-green-ready: #22c55e;
+    --tfsp-green-text: #4ade80;
+    --tfsp-amber-waiting: #eab308;
+    --tfsp-amber-text: #fde047;
+    --tfsp-red-locked: #ef4444;
+    --tfsp-red-deep: #b3352c;
+    --tfsp-red-text: #f87171;
+    --tfsp-text-primary: #f8fafc;
+    --tfsp-text-secondary: #94a3b8;
+    --tfsp-text-muted: #64748b;
+    --tfsp-radius-sm: 3px;
+    --tfsp-radius-md: 4px;
+    --tfsp-radius-full: 999px;
+    --tfsp-font-sans: 'Inter', sans-serif;
+    --tfsp-font-overlay: 'Raleway', 'Inter', sans-serif;
+    --tfsp-font-mono: 'JetBrains Mono', monospace;
+}
+
+/* ============================================
+   FLOATING BUTTON STYLES
+   ============================================ */
+
+.tfsp-floating-button {
+    position: fixed;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 16px;
+    background: linear-gradient(to top right, #18150f 0%, #110f0d 45%, #08090b 100%);
+    border: 1px solid var(--tfsp-border-light);
+    border-radius: var(--tfsp-radius-full);
+    color: var(--tfsp-text-primary);
+    font-family: var(--tfsp-font-sans);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Button States */
+.tfsp-btn-unlocked {
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border-color: rgba(34, 197, 94, 0.5);
+}
+
+.tfsp-btn-unlocked:hover {
+    border-color: rgba(34, 197, 94, 0.8);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 0 3px rgba(34, 197, 94, 0.15);
+}
+
+.tfsp-btn-unlocked .tfsp-btn-icon {
+    color: var(--tfsp-green-ready);
+}
+
+.tfsp-btn-locked {
+    height: 48px;
+    border-color: rgba(239, 68, 68, 0.5);
+}
+
+.tfsp-btn-locked .tfsp-btn-icon,
+.tfsp-btn-locked .tfsp-btn-count,
+.tfsp-btn-locked .tfsp-btn-label {
+    color: var(--tfsp-red-text);
+}
+
+.tfsp-btn-icon {
+    font-size: 16px;
+}
+
+.tfsp-btn-count {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.tfsp-btn-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ============================================
+   GM BANNER STYLES
+   ============================================ */
+
+.tfsp-gm-banner {
+    position: fixed;
+    top: 100px;
+    left: 310px;
+    right: 310px;
+    height: 44px;
+    box-sizing: border-box;
+    padding: 0 14px;
+    background: linear-gradient(135deg, #1e0a0a 0%, #7a2424 100%);
+    border: 1px solid rgba(239, 68, 68, 0.6);
+    border-radius: 6px;
+    color: var(--tfsp-text-primary);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--tfsp-font-sans);
+    z-index: 99;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.tfsp-gm-banner:hover {
+    background: linear-gradient(135deg, #2a0e0e 0%, #8f2b2b 100%);
+}
+
+/* Banner Drag Handle */
+.tfsp-banner-drag-handle {
+    flex-shrink: 0;
+    width: 24px;
+    height: 28px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: grab;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.tfsp-banner-drag-handle:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.tfsp-banner-drag-handle:active {
+    cursor: grabbing;
+}
+
+.tfsp-banner-drag-line {
+    width: 12px;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 2px;
+}
+
+.tfsp-banner-icon {
+    flex-shrink: 0;
+    font-size: 16px;
+    color: var(--tfsp-red-text);
+}
+
+.tfsp-banner-text {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--tfsp-text-primary);
+    white-space: nowrap;
+}
+
+.tfsp-banner-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    background: var(--tfsp-bg-card);
+    border: 1px solid var(--tfsp-border-light);
+    border-radius: var(--tfsp-radius-full);
+    color: var(--tfsp-blue-primary);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.tfsp-banner-hint {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    white-space: nowrap;
+}
+
+/* ============================================
+   GM INTERFACE STYLES
+   ============================================ */
+
+.tfsp-gm-interface {
+    position: fixed;
+    top: 10vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(520px, 95vw);
+    max-width: 520px;
+    max-height: 80vh;
+    background: linear-gradient(to top right, #18150f 0%, #110f0d 45%, #08090b 100%);
+    border: 1px solid var(--tfsp-border-light);
+    border-radius: 6px;
+    box-shadow: 
+        0 24px 48px -8px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    z-index: 9999;
+    font-family: var(--tfsp-font-sans);
+    color: white;
+    overflow: hidden;
+}
+
+/* Whole panel border tints with the current lock state */
+.tfsp-gm-interface.tfsp-panel-locked {
+    border-color: rgba(239, 68, 68, 0.5);
+}
+
+.tfsp-gm-interface.tfsp-panel-unlocked {
+    border-color: rgba(34, 197, 94, 0.5);
+}
+
+/* Interface Header */
+.tfsp-interface-header {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    border-bottom: 1px solid var(--tfsp-border-subtle);
+    padding: 0 20px;
+    height: 48px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.tfsp-header-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 80% 20%, rgba(87, 185, 237, 0.06) 0%, transparent 60%);
+}
+
+.tfsp-header-content {
+    width: 100%;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tfsp-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.tfsp-header-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+
+.tfsp-header-icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.tfsp-header-icon-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.tfsp-interface-title {
+    font-family: var(--tfsp-font-sans) !important;
+    margin: 0 0 2px 0;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--tfsp-text-primary);
+}
+
+.tfsp-interface-subtitle {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+}
+
+.tfsp-header-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.tfsp-header-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.tfsp-header-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+}
+
+.tfsp-header-btn.tfsp-header-btn-active {
+    background: rgba(87, 185, 237, 0.2);
+    border-color: var(--tfsp-blue-primary);
+    color: var(--tfsp-text-primary);
+}
+
+.tfsp-section-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    color: var(--tfsp-text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.tfsp-section-heading i {
+    color: var(--tfsp-blue-primary);
+    font-size: 12px;
+}
+
+/* Tab Content */
+.tfsp-tab-content-wrapper {
+    padding: 20px;
+    max-height: calc(90vh - 160px);
+    overflow-y: auto;
+}
+
+.tfsp-tab-content {
+    display: none;
+}
+
+.tfsp-tab-content.tfsp-tab-active {
+    display: block;
+}
+
+/* Status Card */
+.tfsp-status-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    padding: 20px 16px;
+    margin-bottom: 20px;
+    border: 1px solid;
+}
+
+.tfsp-status-locked {
+    background: linear-gradient(135deg, rgba(30, 10, 10, 0.9), rgba(239, 68, 68, 0.6));
+    border-color: rgba(239, 68, 68, 0.6);
+}
+
+.tfsp-status-unlocked {
+    background: linear-gradient(135deg, rgba(10, 30, 15, 0.9), rgba(34, 197, 94, 0.65));
+    border-color: rgba(34, 197, 94, 0.6);
+}
+
+.tfsp-status-label {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--tfsp-text-primary);
+}
+
+/* Player Stats */
+.tfsp-player-stats {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.tfsp-stat-card {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+}
+
+.tfsp-stat-value {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--tfsp-blue-primary);
+    margin-bottom: 4px;
+}
+
+.tfsp-stat-label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+}
+
+/* Action Buttons */
+.tfsp-action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.tfsp-action-btn {
+    flex: 1;
+    padding: 14px 20px;
+    border-radius: 10px;
+    border: 2px solid;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Action buttons are neutral by default; the currently-actionable Lock/Unlock
+   button (not disabled) gets the blue "primary action" highlight. Resync stays
+   a neutral secondary action regardless of state. */
+.tfsp-btn-lock,
+.tfsp-btn-unlock,
+.tfsp-btn-sync {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--tfsp-border-light);
+    color: var(--tfsp-text-secondary);
+}
+
+.tfsp-btn-lock:not(.tfsp-btn-disabled),
+.tfsp-btn-unlock:not(.tfsp-btn-disabled) {
+    background: linear-gradient(135deg, var(--tfsp-blue-primary), var(--tfsp-blue-deep));
+    border-color: var(--tfsp-blue-primary);
+    color: var(--tfsp-text-primary);
+}
+
+.tfsp-btn-lock:not(.tfsp-btn-disabled):hover,
+.tfsp-btn-unlock:not(.tfsp-btn-disabled):hover {
+    background: linear-gradient(135deg, var(--tfsp-blue-hover), var(--tfsp-blue-primary));
+    box-shadow: 0 6px 12px rgba(87, 185, 237, 0.4);
+}
+
+.tfsp-btn-sync:not(.tfsp-btn-disabled):hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.tfsp-btn-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Player List */
+.tfsp-player-list {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.tfsp-player-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    height: 48px;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.tfsp-player-count-pill {
+    padding: 2px 10px;
+    background: var(--tfsp-bg-card);
+    border: 1px solid var(--tfsp-border-light);
+    border-radius: var(--tfsp-radius-full);
+    color: var(--tfsp-blue-primary);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.tfsp-player-list-content {
+    padding: 4px;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+.tfsp-player-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+    margin: 1px 0;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+}
+
+.tfsp-player-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.tfsp-player-item.tfsp-player-online {
+    background: linear-gradient(90deg, rgba(34, 197, 94, 0.5), rgba(12, 14, 18, 0.55));
+    border-color: rgba(34, 197, 94, 0.6);
+}
+
+.tfsp-player-item.tfsp-player-offline {
+    background: linear-gradient(90deg, rgba(248, 113, 113, 0.35), rgba(12, 14, 18, 0.55));
+    border-color: rgba(248, 113, 113, 0.45);
+}
+
+.tfsp-player-list .tfsp-player-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+}
+
+.tfsp-player-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.tfsp-player-online .tfsp-player-dot {
+    background: var(--tfsp-green-ready);
+    box-shadow: 0 0 6px rgba(34, 197, 94, 0.8);
+}
+
+.tfsp-player-offline .tfsp-player-dot {
+    background: var(--tfsp-red-text);
+    box-shadow: 0 0 6px rgba(248, 113, 113, 0.8);
+}
+
+.tfsp-player-name {
+    font-weight: 600;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.tfsp-player-status {
+    padding: 2px 10px;
+    border-radius: var(--tfsp-radius-full);
+    font-size: 10px;
+    font-weight: 700;
+    border: 1px solid;
+}
+
+.tfsp-player-online .tfsp-player-status {
+    background: rgba(34, 197, 94, 0.2);
+    color: var(--tfsp-green-ready);
+    border-color: rgba(34, 197, 94, 0.4);
+}
+
+.tfsp-player-offline .tfsp-player-status {
+    background: rgba(248, 113, 113, 0.2);
+    color: var(--tfsp-red-text);
+    border-color: rgba(248, 113, 113, 0.4);
+}
+
+.tfsp-no-players {
+    padding: 16px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+    font-size: 13px;
+}
+
+/* Settings Panel */
+/* Settings sub-menus: full-width segmented tab bar */
+.tfsp-subnav {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 18px;
+    padding: 4px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--tfsp-border-light);
+    border-radius: 8px;
+}
+
+.tfsp-subnav-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    color: var(--tfsp-text-secondary);
+    font-family: var(--tfsp-font-sans);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.tfsp-subnav-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: white;
+}
+
+.tfsp-subnav-btn.tfsp-subnav-active {
+    background: linear-gradient(135deg, var(--tfsp-blue-primary), var(--tfsp-blue-deep));
+    border-color: var(--tfsp-blue-primary);
+    color: var(--tfsp-text-primary);
+}
+
+.tfsp-subpanel {
+    display: none;
+}
+
+.tfsp-subpanel.tfsp-subpanel-active {
+    display: block;
+}
+
+.tfsp-settings-section {
+    margin-bottom: 24px;
+}
+
+.tfsp-settings-header {
+    font-family: var(--tfsp-font-sans) !important;
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tfsp-setting-item {
+    margin-bottom: 16px;
+}
+
+.tfsp-setting-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 4px;
+    cursor: pointer;
+}
+
+.tfsp-setting-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.tfsp-setting-hint {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 8px;
+}
+
+.tfsp-setting-input {
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    font-family: inherit;
+    height: auto;
+    line-height: 1.4;
+}
+
+.tfsp-setting-input:focus {
+    outline: none;
+    border-color: rgba(87, 185, 237, 0.6);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Message Editor */
+.tfsp-message-editor {
+    margin-bottom: 20px;
+}
+
+/* Lock Screen Journal picker */
+.tfsp-journal-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+}
+
+.tfsp-journal-picker.tfsp-drag-over {
+    border-color: var(--tfsp-blue-primary);
+    background: rgba(87, 185, 237, 0.08);
+}
+
+.tfsp-journal-current {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 32px;
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.tfsp-journal-current i {
+    margin-right: 6px;
+    color: var(--tfsp-blue-primary);
+}
+
+.tfsp-journal-empty {
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.tfsp-journal-clear {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    line-height: 1;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+}
+
+.tfsp-journal-clear:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+}
+
+.tfsp-journal-results {
+    max-height: 180px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.tfsp-journal-results[hidden] {
+    display: none;
+}
+
+.tfsp-journal-result {
+    width: 100%;
+    padding: 6px 10px;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.tfsp-journal-result:hover,
+.tfsp-journal-result:focus {
+    background: rgba(87, 185, 237, 0.15);
+    border-color: rgba(87, 185, 237, 0.4);
+    outline: none;
+}
+
+.tfsp-message-label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.tfsp-message-hint {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.tfsp-message-input {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: white;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+    margin-bottom: 12px;
+}
+
+.tfsp-message-input:focus {
+    outline: none;
+    border-color: var(--tfsp-blue-primary);
+    box-shadow: 0 0 0 2px rgba(87, 185, 237, 0.2);
+}
+
+.tfsp-save-btn {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--tfsp-blue-primary), var(--tfsp-blue-deep));
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.tfsp-save-btn:hover {
+    box-shadow: 0 6px 12px rgba(87, 185, 237, 0.4);
+}
+
+/* ============================================
+   PLAYER OVERLAY STYLES
+   ============================================ */
+
+.tfsp-player-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #0a0a07;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-family: var(--tfsp-font-overlay);
+}
+
+/* Overlay Card */
+.tfsp-overlay-card {
+    text-align: center;
+    color: white;
+    max-width: none;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    position: relative;
+    z-index: 2;
+    overflow: visible;
+}
+
+/* Drag Handle */
+.tfsp-drag-handle {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: grab;
+    z-index: 10;
+    padding: 8px;
+    border-radius: 24px 24px 0 0;
+}
+
+.tfsp-drag-handle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.tfsp-drag-handle:active {
+    cursor: grabbing;
+}
+
+.tfsp-drag-indicator {
+    width: 20px;
+    height: 3px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+}
+
+.tfsp-drag-handle:hover .tfsp-drag-indicator {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.tfsp-rotating-gradient {
+    display: none;
+}
+
+.tfsp-overlay-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Bordered card wrapping the icon, title, and description */
+.tfsp-overlay-intro {
+    width: min(480px, 92vw);
+    box-sizing: border-box;
+    padding: 28px 24px 30px;
+    background: linear-gradient(to top right, #18150f 0%, #110f0d 45%, #08090b 100%);
+    border: 1px solid var(--tfsp-border-light);
+    border-radius: 2px;
+}
+
+/* Lock Icon */
+.tfsp-lock-icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 76px;
+    height: 76px;
+    margin: 0 auto 18px auto;
+    color: #4db8f5;
+    filter: drop-shadow(0 0 8px rgba(77, 184, 245, 0.55));
+}
+
+.tfsp-lock-icon-box .tfsp-icon {
+    width: 100%;
+    height: 100%;
+}
+
+/* Overlay Title */
+.tfsp-overlay-title {
+    font-family: var(--tfsp-font-overlay) !important;
+    font-size: min(28px, 7vw);
+    line-height: 1.2;
+    margin: 0 0 10px 0;
+    padding: 0;
+    border: none;
+    font-weight: 700;
+    color: var(--tfsp-text-primary);
+    letter-spacing: 0;
+}
+
+.tfsp-overlay-message {
+    font-size: min(12px, 3.4vw);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.88);
+    margin: 0;
+    font-weight: 400;
+}
+
+/* Status Indicator (GM banner-style waiting badge removed from the overlay;
+   kept only for other components that may reuse these class names) */
+
+/* Connected Players (overlay) */
+.tfsp-connected-players-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: min(420px, 92vw);
+    margin: 30px 0 0 0;
+}
+
+.tfsp-connected-players-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.tfsp-connected-players-title .tfsp-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.tfsp-connected-players-pill {
+    box-sizing: border-box;
+    width: 194px;
+    padding: 4px 0;
+    text-align: center;
+    background: transparent;
+    border: 1px solid var(--tfsp-border-light);
+    border-radius: var(--tfsp-radius-full);
+    color: var(--tfsp-blue-primary);
+    font-size: 12px;
+    font-weight: 400;
+}
+
+/* Player Info */
+.tfsp-player-info {
+    display: flex;
+    gap: 26px;
+    width: min(420px, 92vw);
+    margin: 21px 0 0 0;
+}
+
+.tfsp-player-card {
+    flex: 1;
+    box-sizing: border-box;
+    height: 114px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 22px 10px 0;
+    border-radius: 4px;
+    text-align: center;
+    border: 1px solid;
+}
+
+.tfsp-player-you {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.38) 0%, rgba(14, 24, 16, 0.95) 100%);
+    border-color: rgba(34, 197, 94, 0.75);
+}
+
+.tfsp-player-count {
+    background: linear-gradient(135deg, rgba(234, 179, 8, 0.32) 0%, rgba(26, 19, 8, 0.95) 100%);
+    border-color: rgba(234, 179, 8, 0.65);
+}
+
+/* Reset the GM player-list pill styling that .tfsp-player-status also carries */
+.tfsp-player-card .tfsp-player-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 0 4px 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: none;
+    font-size: 13px;
+    line-height: 17px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.tfsp-player-card .tfsp-player-name {
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+/* Single name sits lower than a stacked list */
+.tfsp-player-card .tfsp-player-name:nth-child(2):last-child {
+    margin-top: 19px;
+}
+
+.tfsp-player-count .tfsp-player-name {
+    color: var(--tfsp-amber-waiting);
+}
+
+.tfsp-status-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--tfsp-green-ready);
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(34, 197, 94, 0.8);
+}
+
+.tfsp-status-dot.tfsp-status-waiting {
+    background: var(--tfsp-amber-waiting);
+    box-shadow: 0 0 6px rgba(234, 179, 8, 0.8);
+}
+
+/* Rotating tips / trivia: plain text under the journal, no box */
+.tfsp-overlay-tip {
+    width: min(612px, 94vw);
+    box-sizing: border-box;
+    margin: 20px 0 0 0;
+    text-align: center;
+}
+
+.tfsp-overlay-tip-label {
+    margin-bottom: 6px;
+    font-size: 11px;
+    line-height: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--tfsp-blue-primary);
+}
+
+.tfsp-overlay-tip-text {
+    /* Always reserve exactly two lines (2 x 13px x 1.5) so tips of any length never move the layout */
+    height: 39px;
+    font-size: 13px;
+    font-style: italic;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.92);
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    transition: opacity 0.4s ease;
+}
+
+/* Opacity-only fade: the only animation in the module, and the cheapest kind. */
+.tfsp-overlay-tip-text.tfsp-tip-fading {
+    opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tfsp-overlay-tip-text {
+        transition: none;
+    }
+}
+
+.tfsp-overlay-tip + .tfsp-overlay-footer {
+    margin-top: 28px;
+}
+
+/* Linked Journal */
+.tfsp-overlay-journal {
+    width: min(612px, 94vw);
+    box-sizing: border-box;
+    margin: 25px 0 0 0;
+    background: linear-gradient(to top right, #18150f 0%, #110f0d 45%, #08090b 100%);
+    border: 1px solid var(--tfsp-border-light);
+    border-radius: 0;
+    text-align: left;
+    overflow: hidden;
+}
+
+.tfsp-overlay-journal-title {
+    padding: 6px 14px;
+    border-bottom: 1px solid var(--tfsp-border-light);
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 400;
+    color: var(--tfsp-text-primary);
+    text-align: center;
+}
+
+.tfsp-overlay-journal-body {
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 8px 18px;
+    font-size: 13px;
+    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.tfsp-overlay-journal-body :first-child {
+    margin-top: 0;
+}
+
+/* Footer Branding */
+.tfsp-overlay-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: 120px;
+}
+
+.tfsp-overlay-journal + .tfsp-overlay-footer {
+    margin-top: 19px;
+}
+
+.tfsp-overlay-footer-link {
+    display: block;
+    line-height: 0;
+    cursor: pointer;
+}
+
+.tfsp-overlay-footer-logo {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+}
+
+.tfsp-overlay-footer-text {
+    font-size: 13px;
+    font-style: normal;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+/* No animations or backdrop blur on purpose: keeps the module cheap on low-end machines. */
+
+/* ============================================
+   TABLE FLOW FAMILY THEME
+   Shared look with Intermission and Patch Notes: flat dark surfaces, thin brown
+   borders, gold accents, pill buttons, plain-glyph header controls, no shadows.
+   Kept last so it wins over the component rules above.
+   ============================================ */
+
+:root {
+    --tfsp-gold: #d4b483;
+    --tfsp-gold-soft: rgba(212, 180, 131, 0.14);
+    --tfsp-ink: #0b1220;
+    --tfsp-surface: #101010;
+    --tfsp-slate: #94a3b8;
+    --tfsp-slate-dim: #64748b;
+}
+
+/* No drop shadows or glows anywhere in the module */
+[class*="tfsp-"],
+[class*="tfsp-"]:hover,
+[class*="tfsp-"]:focus {
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+.tfsp-lock-icon-box {
+    filter: none;
+}
+
+/* Foundry styles buttons with its display font; keep the family's Inter throughout */
+.tfsp-gm-interface button,
+.tfsp-gm-interface input,
+.tfsp-gm-interface select,
+.tfsp-gm-interface textarea,
+.tfsp-floating-button {
+    font-family: var(--tfsp-font-sans);
+}
+
+/* Floating button: square family icon button */
+.tfsp-floating-button {
+    background: var(--tfsp-bar);
+    border: 1px solid var(--tfsp-border-light);
+    border-radius: 6px;
+}
+
+.tfsp-btn-unlocked,
+.tfsp-btn-unlocked:hover {
+    width: 48px;
+    border-color: rgba(34, 197, 94, 0.6);
+}
+
+.tfsp-btn-unlocked:hover {
+    border-color: var(--tfsp-green-ready);
+}
+
+.tfsp-btn-locked:hover {
+    border-color: var(--tfsp-red-locked);
+}
+
+.tfsp-btn-unlocked .tfsp-btn-icon {
+    color: var(--tfsp-green-ready);
+}
+
+.tfsp-btn-locked {
+    border-color: rgba(239, 68, 68, 0.6);
+}
+
+/* Banner */
+.tfsp-gm-banner {
+    background: linear-gradient(135deg, #1a0d0d 0%, #5c2020 100%);
+    border: 1px solid rgba(239, 68, 68, 0.55);
+    border-radius: 4px;
+}
+
+.tfsp-gm-banner:hover {
+    background: linear-gradient(135deg, #220f0f 0%, #6b2525 100%);
+}
+
+.tfsp-banner-drag-handle {
+    background: transparent;
+    border: 1px solid var(--tfsp-border-light);
+}
+
+.tfsp-banner-badge,
+.tfsp-player-count-pill {
+    color: var(--tfsp-slate);
+}
+
+.tfsp-banner-text {
+    font-weight: 600;
+}
+
+/* Panel shell and header */
+.tfsp-gm-interface,
+.tfsp-gm-interface.tfsp-panel-locked,
+.tfsp-gm-interface.tfsp-panel-unlocked {
+    background: linear-gradient(to top right, #18150f 0%, #110f0d 45%, #08090b 100%);
+    border: 1px solid var(--tfsp-border-light);
+    border-radius: 4px;
+}
+
+.tfsp-interface-header {
+    background: transparent;
+    border-bottom: 1px solid var(--tfsp-border-light);
+    padding: 0 16px;
+}
+
+.tfsp-header-gradient {
+    display: none;
+}
+
+.tfsp-drag-header {
+    cursor: grab;
+}
+
+.tfsp-drag-header:active {
+    cursor: grabbing;
+}
+
+.tfsp-interface-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: 0;
+}
+
+.tfsp-interface-subtitle {
+    font-size: 12px;
+    line-height: 1.2;
+    color: var(--tfsp-slate-dim);
+}
+
+.tfsp-header-buttons {
+    gap: 4px;
+}
+
+.tfsp-header-btn {
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: #e5e7eb;
+    font-weight: 600;
+}
+
+.tfsp-header-btn:hover {
+    background: transparent;
+    color: var(--tfsp-gold);
+}
+
+.tfsp-header-btn.tfsp-header-btn-active {
+    background: transparent;
+    border: none;
+    color: var(--tfsp-gold);
+}
+
+/* Section headings: gold icon + white title */
+.tfsp-section-heading {
+    gap: 10px;
+    margin-bottom: 14px;
+    color: var(--tfsp-text-primary);
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.tfsp-section-heading i {
+    color: var(--tfsp-gold);
+    font-size: 16px;
+}
+
+.tfsp-player-list-header {
+    background: transparent;
+    border-bottom: none;
+    padding: 0 0 0 0;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--tfsp-text-primary);
+}
+
+.tfsp-player-list-header i {
+    margin-right: 4px;
+    color: var(--tfsp-gold);
+    font-size: 16px;
+}
+
+.tfsp-player-count-pill {
+    background: transparent;
+    border: none;
+    font-size: 12px;
+    padding: 4px 0;
+}
+
+/* Status card: dark card tinted by session state */
+.tfsp-status-card {
+    border-radius: 4px;
+}
+
+.tfsp-status-locked {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(239, 68, 68, 0.28));
+    border-color: rgba(239, 68, 68, 0.55);
+}
+
+.tfsp-status-unlocked {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.26));
+    border-color: rgba(34, 197, 94, 0.55);
+}
+
+.tfsp-status-label {
+    font-weight: 600;
+}
+
+/* Stat cards */
+.tfsp-stat-card {
+    background: var(--tfsp-surface);
+    border: 1px solid var(--tfsp-border-light);
+    border-radius: 4px;
+}
+
+.tfsp-stat-value {
+    font-family: var(--tfsp-font-mono);
+    font-weight: 700;
+    color: var(--tfsp-blue-primary);
+}
+
+.tfsp-stat-label {
+    color: var(--tfsp-slate);
+    font-weight: 500;
+}
+
+/* Pill buttons: solid blue primary, dark outlined secondary */
+.tfsp-action-btn {
+    padding: 13px 20px;
+    border-width: 1px;
+    border-radius: var(--tfsp-radius-full);
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.tfsp-btn-lock,
+.tfsp-btn-unlock,
+.tfsp-btn-sync {
+    background: var(--tfsp-surface);
+    border-color: var(--tfsp-border-light);
+    color: var(--tfsp-text-primary);
+}
+
+.tfsp-btn-lock:not(.tfsp-btn-disabled),
+.tfsp-btn-unlock:not(.tfsp-btn-disabled) {
+    background: var(--tfsp-blue-primary);
+    border-color: var(--tfsp-blue-primary);
+    color: var(--tfsp-ink);
+}
+
+.tfsp-btn-lock:not(.tfsp-btn-disabled):hover,
+.tfsp-btn-unlock:not(.tfsp-btn-disabled):hover {
+    background: var(--tfsp-blue-hover);
+}
+
+.tfsp-btn-sync:not(.tfsp-btn-disabled):hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* Player list: open rows under the heading, tinted by state */
+.tfsp-player-list {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+}
+
+.tfsp-player-list-content {
+    padding: 0;
+    max-height: none;
+    overflow: visible;
+}
+
+.tfsp-player-item {
+    padding: 8px 12px;
+    margin: 0 0 6px 0;
+    border-radius: 2px;
+    background: var(--tfsp-surface);
+    border-color: var(--tfsp-border-light);
+}
+
+.tfsp-player-item.tfsp-player-online {
+    background: linear-gradient(90deg, rgba(34, 197, 94, 0.22), rgba(12, 14, 18, 0.4));
+    border-color: rgba(34, 197, 94, 0.6);
+}
+
+.tfsp-player-item.tfsp-player-offline {
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0.2), rgba(12, 14, 18, 0.4));
+    border-color: rgba(239, 68, 68, 0.5);
+}
+
+.tfsp-player-list .tfsp-player-info {
+    gap: 10px;
+}
+
+.tfsp-player-dot {
+    width: 8px;
+    height: 8px;
+}
+
+.tfsp-player-list .tfsp-player-name {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.tfsp-player-list .tfsp-player-status {
+    padding: 0;
+    border: none;
+    background: none;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.tfsp-player-online .tfsp-player-status {
+    background: none;
+    color: var(--tfsp-green-text);
+}
+
+.tfsp-player-offline .tfsp-player-status {
+    background: none;
+    color: var(--tfsp-red-text);
+}
+
+/* Settings tabs: text tabs with a gold underline */
+.tfsp-subnav {
+    gap: 0;
+    margin: 0 0 18px 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--tfsp-border-light);
+    border-radius: 0;
+}
+
+.tfsp-subnav-btn {
+    padding: 10px 12px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    margin-bottom: -1px;
+    color: var(--tfsp-slate);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.tfsp-subnav-btn i {
+    display: none;
+}
+
+.tfsp-subnav-btn:hover {
+    background: transparent;
+    color: var(--tfsp-text-primary);
+}
+
+.tfsp-subnav-btn.tfsp-subnav-active {
+    background: transparent;
+    border-color: transparent transparent var(--tfsp-gold) transparent;
+    color: var(--tfsp-gold);
+}
+
+.tfsp-settings-header {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--tfsp-text-primary);
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 10px;
+}
+
+.tfsp-setting-label,
+.tfsp-message-label {
+    font-weight: 600;
+    color: var(--tfsp-text-primary);
+}
+
+.tfsp-setting-hint,
+.tfsp-message-hint {
+    font-size: 12px;
+    color: var(--tfsp-slate);
+}
+
+.tfsp-setting-label input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    flex-shrink: 0;
+    position: relative;
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    background: var(--tfsp-surface);
+    border: 1px solid var(--tfsp-border-light);
+    border-radius: 4px;
+}
+
+.tfsp-setting-label input[type="checkbox"]::before {
+    content: none;
+}
+
+.tfsp-setting-label input[type="checkbox"]:checked {
+    background: var(--tfsp-gold);
+    border-color: var(--tfsp-gold);
+}
+
+.tfsp-setting-label input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 3px;
+    width: 6px;
+    height: 11px;
+    border: solid var(--tfsp-ink);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Fields */
+.tfsp-setting-input,
+.tfsp-message-input {
+    background: var(--tfsp-surface);
+    border: 1px solid var(--tfsp-border-light);
+    border-radius: 4px;
+    color: #e5e7eb;
+}
+
+.tfsp-setting-input::placeholder,
+.tfsp-message-input::placeholder {
+    color: var(--tfsp-slate-dim);
+}
+
+.tfsp-setting-input:focus,
+.tfsp-message-input:focus {
+    background: var(--tfsp-surface);
+    border-color: var(--tfsp-gold);
+}
+
+.tfsp-journal-picker {
+    border-color: var(--tfsp-border-light);
+    border-radius: 4px;
+}
+
+.tfsp-journal-picker.tfsp-drag-over {
+    border-color: var(--tfsp-gold);
+    background: var(--tfsp-gold-soft);
+}
+
+.tfsp-journal-current,
+.tfsp-journal-result {
+    background: var(--tfsp-surface);
+    border-color: var(--tfsp-border-light);
+    border-radius: 4px;
+}
+
+.tfsp-journal-current i {
+    color: var(--tfsp-gold);
+}
+
+.tfsp-journal-result:hover,
+.tfsp-journal-result:focus {
+    background: var(--tfsp-gold-soft);
+    border-color: var(--tfsp-gold);
+}
+
+.tfsp-journal-clear {
+    background: var(--tfsp-surface);
+    border-color: var(--tfsp-border-light);
+    border-radius: 4px;
+}
+
+.tfsp-journal-clear:hover {
+    background: transparent;
+    color: var(--tfsp-gold);
+}
+
+/* Save buttons are always the Table Flow blue pill */
+.tfsp-save-btn {
+    padding: 11px 24px;
+    background: var(--tfsp-blue-primary);
+    border: 1px solid var(--tfsp-blue-primary);
+    border-radius: var(--tfsp-radius-full);
+    color: var(--tfsp-ink);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.tfsp-save-btn:hover {
+    background: var(--tfsp-blue-hover);
+    border-color: var(--tfsp-blue-hover);
+}
+
+/* Settings popup: anchored to a fixed top and a fixed height, so the header, tabs and
+   Save button stay in the same place on every tab and never need chasing. */
+.tfsp-settings-popup {
+    top: 4vh;
+    height: min(880px, 92vh);
+    max-height: none;
+    z-index: 10001;
+    display: flex;
+    flex-direction: column;
+}
+
+.tfsp-popup-tabs {
+    flex-shrink: 0;
+    padding: 12px 20px 0;
+}
+
+.tfsp-popup-tabs .tfsp-subnav {
+    margin-bottom: 0;
+}
+
+/* Visible scrollbars: Foundry's default thumb is nearly invisible on our dark surfaces */
+.tfsp-gm-interface,
+.tfsp-gm-interface .tfsp-tab-content-wrapper,
+.tfsp-gm-interface .tfsp-message-input,
+.tfsp-journal-results,
+.tfsp-player-overlay .tfsp-overlay-journal-body {
+    scrollbar-width: thin;
+    scrollbar-color: #8a7550 transparent;
+}
+
+/* The popup itself never scrolls at normal sizes: the tips box absorbs the spare height
+   and scrolls on its own. The auto fallback only appears on very small screens. */
+.tfsp-settings-popup .tfsp-tab-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.tfsp-settings-popup #tab-settings-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.tfsp-settings-popup #tab-settings-content > *,
+.tfsp-settings-popup .tfsp-subpanel-active > * {
+    flex-shrink: 0;
+}
+
+.tfsp-settings-popup .tfsp-subpanel-active {
+    display: contents;
+}
+
+.tfsp-settings-popup .tfsp-settings-section {
+    margin-bottom: 16px;
+}
+
+.tfsp-settings-popup .tfsp-tips-section,
+.tfsp-settings-popup .tfsp-tips-item {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0;
+}
+
+.tfsp-tips-item .tfsp-message-input {
+    flex: 1 1 auto;
+    min-height: 72px;
+    margin-bottom: 0;
+}
+
+/* Every text area can be dragged taller from its corner and scrolls when full */
+.tfsp-message-input {
+    min-height: 72px;
+    resize: vertical;
+    overflow-y: auto;
+}
+
+.tfsp-settings-popup .tfsp-interface-header {
+    flex-shrink: 0;
+}
+
+.tfsp-settings-popup .tfsp-tab-content-wrapper {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: none;
+}
+
+.tfsp-popup-footer {
+    flex-shrink: 0;
+    padding: 16px 20px;
+    border-top: 1px solid var(--tfsp-border-light);
+}
+
+.tfsp-popup-footer .tfsp-save-btn {
+    width: 100%;
+}
+
+/* Lock screen touches */
+.tfsp-overlay-tip-label {
+    color: var(--tfsp-gold);
+}
+
+.tfsp-connected-players-pill {
+    color: var(--tfsp-slate);
+    border: none;
+}
+
+.tfsp-status-dot,
+.tfsp-status-dot.tfsp-status-waiting {
+    box-shadow: none;
+}
+
+/* GM lock indicator styles (Settings > General > Lock Indicator) */
+.tfsp-gm-banner.tfsp-banner-compact {
+    left: 50%;
+    right: auto;
+    width: max-content;
+    max-width: calc(100vw - 24px);
+    transform: translateX(-50%);
+    border-radius: var(--tfsp-radius-full);
+    padding: 0 16px 0 8px;
+}
+
+.tfsp-banner-compact .tfsp-banner-hint {
+    display: none;
+}
+
+.tfsp-lock-frame {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 98;
+    box-sizing: border-box;
+    border: 4px solid rgba(239, 68, 68, 0.7);
+    pointer-events: none;
+}

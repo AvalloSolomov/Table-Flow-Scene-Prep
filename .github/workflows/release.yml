@@ -1,0 +1,46 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check script syntax
+        run: |
+          find scripts -name '*.js' -print0 | xargs -0 -n1 node --check
+          jq empty module.json
+
+      - name: Verify manifest paths exist
+        run: |
+          jq -r '(.scripts + .styles)[]' module.json | while read -r f; do
+            test -f "$f" || { echo "Missing file listed in module.json: $f"; exit 1; }
+          done
+
+      - name: Set manifest URLs and version from the release tag
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          REPO_URL="https://github.com/${{ github.repository }}"
+          jq --arg v "$VERSION" \
+             --arg url "$REPO_URL" \
+             --arg manifest "$REPO_URL/releases/latest/download/module.json" \
+             --arg download "$REPO_URL/releases/download/${GITHUB_REF_NAME}/module.zip" \
+             '.version=$v | .url=$url | .manifest=$manifest | .download=$download' \
+             module.json > module.tmp && mv module.tmp module.json
+
+      - name: Package module
+        run: zip -r module.zip module.json README.md LICENSE TABLEFLOW_LOGO.svg scripts styles -x '*.backup' -x '*.log'
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            module.json
+            module.zip
