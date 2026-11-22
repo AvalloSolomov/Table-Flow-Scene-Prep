@@ -236,7 +236,11 @@
 .tfsp-interface-header {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
     border-bottom: 1px solid var(--tfsp-border-subtle);
-    padding: 18px 20px;
+    padding: 0 20px;
+    height: 48px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
     position: relative;
     overflow: hidden;
 }
@@ -251,6 +255,7 @@
 }
 
 .tfsp-header-content {
+    width: 100%;
     position: relative;
     z-index: 2;
     display: flex;
@@ -330,29 +335,6 @@
     color: var(--tfsp-text-primary);
 }
 
-.tfsp-back-btn {
-    margin-left: auto;
-    padding: 6px 12px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid var(--tfsp-border-light);
-    border-radius: var(--tfsp-radius-full);
-    color: var(--tfsp-text-primary);
-    font-family: var(--tfsp-font-sans);
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.tfsp-back-btn:hover {
-    background: rgba(255, 255, 255, 0.12);
-}
-
-.tfsp-back-btn i {
-    margin-right: 4px;
-    color: var(--tfsp-blue-primary);
-}
-
-/* Section Heading (replaces the old tab bar; gear button toggles views) */
 .tfsp-section-heading {
     display: flex;
     align-items: center;
@@ -505,7 +487,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 12px;
+    padding: 0 12px;
+    height: 48px;
+    box-sizing: border-box;
     background: rgba(255, 255, 255, 0.05);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     font-size: 12px;
@@ -885,12 +869,6 @@
     font-family: var(--tfsp-font-overlay);
 }
 
-/* Allow specific windows (Simple Quest journal) to stay usable above the lock screen */
-.window-app.tfsp-allow-above-overlay,
-.application.tfsp-allow-above-overlay {
-    z-index: 100000 !important;
-}
-
 /* Overlay Card */
 .tfsp-overlay-card {
     text-align: center;
@@ -1235,3 +1213,639 @@
 }
 
 /* No animations or backdrop blur on purpose: keeps the module cheap on low-end machines. */
+
+/* ============================================
+   TABLE FLOW FAMILY THEME
+   Shared look with Intermission and Patch Notes: flat dark surfaces, thin brown
+   borders, gold accents, pill buttons, plain-glyph header controls, no shadows.
+   Kept last so it wins over the component rules above.
+   ============================================ */
+
+:root {
+    --tfsp-gold: #d4b483;
+    --tfsp-gold-soft: rgba(212, 180, 131, 0.14);
+    --tfsp-ink: #0b1220;
+    --tfsp-surface: #101010;
+    --tfsp-slate: #94a3b8;
+    --tfsp-slate-dim: #64748b;
+}
+
+/* No drop shadows or glows anywhere in the module */
+[class*="tfsp-"],
+[class*="tfsp-"]:hover,
+[class*="tfsp-"]:focus {
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+.tfsp-lock-icon-box {
+    filter: none;
+}
+
+/* Foundry styles buttons with its display font; keep the family's Inter throughout */
+.tfsp-gm-interface button,
+.tfsp-gm-interface input,
+.tfsp-gm-interface select,
+.tfsp-gm-interface textarea,
+.tfsp-floating-button {
+    font-family: var(--tfsp-font-sans);
+}
+
+/* Floating button: square family icon button */
+.tfsp-floating-button {
+    background: var(--tfsp-bar);
+    border: 1px solid var(--tfsp-border-light);
+    border-radius: 6px;
+}
+
+.tfsp-btn-unlocked,
+.tfsp-btn-unlocked:hover {
+    width: 48px;
+    border-color: rgba(34, 197, 94, 0.6);
+}
+
+.tfsp-btn-unlocked:hover {
+    border-color: var(--tfsp-green-ready);
+}
+
+.tfsp-btn-locked:hover {
+    border-color: var(--tfsp-red-locked);
+}
+
+.tfsp-btn-unlocked .tfsp-btn-icon {
+    color: var(--tfsp-green-ready);
+}
+
+.tfsp-btn-locked {
+    border-color: rgba(239, 68, 68, 0.6);
+}
+
+/* Banner */
+.tfsp-gm-banner {
+    background: linear-gradient(135deg, #1a0d0d 0%, #5c2020 100%);
+    border: 1px solid rgba(239, 68, 68, 0.55);
+    border-radius: 4px;
+}
+
+.tfsp-gm-banner:hover {
+    background: linear-gradient(135deg, #220f0f 0%, #6b2525 100%);
+}
+
+.tfsp-banner-drag-handle {
+    background: transparent;
+    border: 1px solid var(--tfsp-border-light);
+}
+
+.tfsp-banner-badge,
+.tfsp-player-count-pill {
+    color: var(--tfsp-slate);
+}
+
+.tfsp-banner-text {
+    font-weight: 600;
+}
+
+/* Panel shell and header */
+.tfsp-gm-interface,
+.tfsp-gm-interface.tfsp-panel-locked,
+.tfsp-gm-interface.tfsp-panel-unlocked {
+    background: linear-gradient(to top right, #18150f 0%, #110f0d 45%, #08090b 100%);
+    border: 1px solid var(--tfsp-border-light);
+    border-radius: 4px;
+}
+
+.tfsp-interface-header {
+    background: transparent;
+    border-bottom: 1px solid var(--tfsp-border-light);
+    padding: 0 16px;
+}
+
+.tfsp-header-gradient {
+    display: none;
+}
+
+.tfsp-drag-header {
+    cursor: grab;
+}
+
+.tfsp-drag-header:active {
+    cursor: grabbing;
+}
+
+.tfsp-interface-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: 0;
+}
+
+.tfsp-interface-subtitle {
+    font-size: 12px;
+    line-height: 1.2;
+    color: var(--tfsp-slate-dim);
+}
+
+.tfsp-header-buttons {
+    gap: 4px;
+}
+
+.tfsp-header-btn {
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: #e5e7eb;
+    font-weight: 600;
+}
+
+.tfsp-header-btn:hover {
+    background: transparent;
+    color: var(--tfsp-gold);
+}
+
+.tfsp-header-btn.tfsp-header-btn-active {
+    background: transparent;
+    border: none;
+    color: var(--tfsp-gold);
+}
+
+/* Section headings: gold icon + white title */
+.tfsp-section-heading {
+    gap: 10px;
+    margin-bottom: 14px;
+    color: var(--tfsp-text-primary);
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.tfsp-section-heading i {
+    color: var(--tfsp-gold);
+    font-size: 16px;
+}
+
+.tfsp-player-list-header {
+    background: transparent;
+    border-bottom: none;
+    padding: 0 0 0 0;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--tfsp-text-primary);
+}
+
+.tfsp-player-list-header i {
+    margin-right: 4px;
+    color: var(--tfsp-gold);
+    font-size: 16px;
+}
+
+.tfsp-player-count-pill {
+    background: transparent;
+    border: none;
+    font-size: 12px;
+    padding: 4px 0;
+}
+
+/* Status card: dark card tinted by session state */
+.tfsp-status-card {
+    border-radius: 4px;
+}
+
+.tfsp-status-locked {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(239, 68, 68, 0.28));
+    border-color: rgba(239, 68, 68, 0.55);
+}
+
+.tfsp-status-unlocked {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.26));
+    border-color: rgba(34, 197, 94, 0.55);
+}
+
+.tfsp-status-label {
+    font-weight: 600;
+}
+
+/* Stat cards */
+.tfsp-stat-card {
+    background: var(--tfsp-surface);
+    border: 1px solid var(--tfsp-border-light);
+    border-radius: 4px;
+}
+
+.tfsp-stat-value {
+    font-family: var(--tfsp-font-mono);
+    font-weight: 700;
+    color: var(--tfsp-blue-primary);
+}
+
+.tfsp-stat-label {
+    color: var(--tfsp-slate);
+    font-weight: 500;
+}
+
+/* Pill buttons: solid blue primary, dark outlined secondary */
+.tfsp-action-btn {
+    padding: 13px 20px;
+    border-width: 1px;
+    border-radius: var(--tfsp-radius-full);
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.tfsp-btn-lock,
+.tfsp-btn-unlock,
+.tfsp-btn-sync {
+    background: var(--tfsp-surface);
+    border-color: var(--tfsp-border-light);
+    color: var(--tfsp-text-primary);
+}
+
+.tfsp-btn-lock:not(.tfsp-btn-disabled),
+.tfsp-btn-unlock:not(.tfsp-btn-disabled) {
+    background: var(--tfsp-blue-primary);
+    border-color: var(--tfsp-blue-primary);
+    color: var(--tfsp-ink);
+}
+
+.tfsp-btn-lock:not(.tfsp-btn-disabled):hover,
+.tfsp-btn-unlock:not(.tfsp-btn-disabled):hover {
+    background: var(--tfsp-blue-hover);
+}
+
+.tfsp-btn-sync:not(.tfsp-btn-disabled):hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* Player list: open rows under the heading, tinted by state */
+.tfsp-player-list {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+}
+
+.tfsp-player-list-content {
+    padding: 0;
+    max-height: none;
+    overflow: visible;
+}
+
+.tfsp-player-item {
+    padding: 8px 12px;
+    margin: 0 0 6px 0;
+    border-radius: 2px;
+    background: var(--tfsp-surface);
+    border-color: var(--tfsp-border-light);
+}
+
+.tfsp-player-item.tfsp-player-online {
+    background: linear-gradient(90deg, rgba(34, 197, 94, 0.22), rgba(12, 14, 18, 0.4));
+    border-color: rgba(34, 197, 94, 0.6);
+}
+
+.tfsp-player-item.tfsp-player-offline {
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0.2), rgba(12, 14, 18, 0.4));
+    border-color: rgba(239, 68, 68, 0.5);
+}
+
+.tfsp-player-list .tfsp-player-info {
+    gap: 10px;
+}
+
+.tfsp-player-dot {
+    width: 8px;
+    height: 8px;
+}
+
+.tfsp-player-list .tfsp-player-name {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.tfsp-player-list .tfsp-player-status {
+    padding: 0;
+    border: none;
+    background: none;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.tfsp-player-online .tfsp-player-status {
+    background: none;
+    color: var(--tfsp-green-text);
+}
+
+.tfsp-player-offline .tfsp-player-status {
+    background: none;
+    color: var(--tfsp-red-text);
+}
+
+/* Settings tabs: text tabs with a gold underline */
+.tfsp-subnav {
+    gap: 0;
+    margin: 0 0 18px 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--tfsp-border-light);
+    border-radius: 0;
+}
+
+.tfsp-subnav-btn {
+    padding: 10px 12px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    margin-bottom: -1px;
+    color: var(--tfsp-slate);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.tfsp-subnav-btn i {
+    display: none;
+}
+
+.tfsp-subnav-btn:hover {
+    background: transparent;
+    color: var(--tfsp-text-primary);
+}
+
+.tfsp-subnav-btn.tfsp-subnav-active {
+    background: transparent;
+    border-color: transparent transparent var(--tfsp-gold) transparent;
+    color: var(--tfsp-gold);
+}
+
+.tfsp-settings-header {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--tfsp-text-primary);
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 10px;
+}
+
+.tfsp-setting-label,
+.tfsp-message-label {
+    font-weight: 600;
+    color: var(--tfsp-text-primary);
+}
+
+.tfsp-setting-hint,
+.tfsp-message-hint {
+    font-size: 12px;
+    color: var(--tfsp-slate);
+}
+
+.tfsp-setting-label input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    flex-shrink: 0;
+    position: relative;
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    background: var(--tfsp-surface);
+    border: 1px solid var(--tfsp-border-light);
+    border-radius: 4px;
+}
+
+.tfsp-setting-label input[type="checkbox"]::before {
+    content: none;
+}
+
+.tfsp-setting-label input[type="checkbox"]:checked {
+    background: var(--tfsp-gold);
+    border-color: var(--tfsp-gold);
+}
+
+.tfsp-setting-label input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 3px;
+    width: 6px;
+    height: 11px;
+    border: solid var(--tfsp-ink);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Fields */
+.tfsp-setting-input,
+.tfsp-message-input {
+    background: var(--tfsp-surface);
+    border: 1px solid var(--tfsp-border-light);
+    border-radius: 4px;
+    color: #e5e7eb;
+}
+
+.tfsp-setting-input::placeholder,
+.tfsp-message-input::placeholder {
+    color: var(--tfsp-slate-dim);
+}
+
+.tfsp-setting-input:focus,
+.tfsp-message-input:focus {
+    background: var(--tfsp-surface);
+    border-color: var(--tfsp-gold);
+}
+
+.tfsp-journal-picker {
+    border-color: var(--tfsp-border-light);
+    border-radius: 4px;
+}
+
+.tfsp-journal-picker.tfsp-drag-over {
+    border-color: var(--tfsp-gold);
+    background: var(--tfsp-gold-soft);
+}
+
+.tfsp-journal-current,
+.tfsp-journal-result {
+    background: var(--tfsp-surface);
+    border-color: var(--tfsp-border-light);
+    border-radius: 4px;
+}
+
+.tfsp-journal-current i {
+    color: var(--tfsp-gold);
+}
+
+.tfsp-journal-result:hover,
+.tfsp-journal-result:focus {
+    background: var(--tfsp-gold-soft);
+    border-color: var(--tfsp-gold);
+}
+
+.tfsp-journal-clear {
+    background: var(--tfsp-surface);
+    border-color: var(--tfsp-border-light);
+    border-radius: 4px;
+}
+
+.tfsp-journal-clear:hover {
+    background: transparent;
+    color: var(--tfsp-gold);
+}
+
+/* Save buttons are always the Table Flow blue pill */
+.tfsp-save-btn {
+    padding: 11px 24px;
+    background: var(--tfsp-blue-primary);
+    border: 1px solid var(--tfsp-blue-primary);
+    border-radius: var(--tfsp-radius-full);
+    color: var(--tfsp-ink);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.tfsp-save-btn:hover {
+    background: var(--tfsp-blue-hover);
+    border-color: var(--tfsp-blue-hover);
+}
+
+/* Settings popup: anchored to a fixed top and a fixed height, so the header, tabs and
+   Save button stay in the same place on every tab and never need chasing. */
+.tfsp-settings-popup {
+    top: 4vh;
+    height: min(880px, 92vh);
+    max-height: none;
+    z-index: 10001;
+    display: flex;
+    flex-direction: column;
+}
+
+.tfsp-popup-tabs {
+    flex-shrink: 0;
+    padding: 12px 20px 0;
+}
+
+.tfsp-popup-tabs .tfsp-subnav {
+    margin-bottom: 0;
+}
+
+/* Visible scrollbars: Foundry's default thumb is nearly invisible on our dark surfaces */
+.tfsp-gm-interface,
+.tfsp-gm-interface .tfsp-tab-content-wrapper,
+.tfsp-gm-interface .tfsp-message-input,
+.tfsp-journal-results,
+.tfsp-player-overlay .tfsp-overlay-journal-body {
+    scrollbar-width: thin;
+    scrollbar-color: #8a7550 transparent;
+}
+
+/* The popup itself never scrolls at normal sizes: the tips box absorbs the spare height
+   and scrolls on its own. The auto fallback only appears on very small screens. */
+.tfsp-settings-popup .tfsp-tab-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.tfsp-settings-popup #tab-settings-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.tfsp-settings-popup #tab-settings-content > *,
+.tfsp-settings-popup .tfsp-subpanel-active > * {
+    flex-shrink: 0;
+}
+
+.tfsp-settings-popup .tfsp-subpanel-active {
+    display: contents;
+}
+
+.tfsp-settings-popup .tfsp-settings-section {
+    margin-bottom: 16px;
+}
+
+.tfsp-settings-popup .tfsp-tips-section,
+.tfsp-settings-popup .tfsp-tips-item {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0;
+}
+
+.tfsp-tips-item .tfsp-message-input {
+    flex: 1 1 auto;
+    min-height: 72px;
+    margin-bottom: 0;
+}
+
+/* Every text area can be dragged taller from its corner and scrolls when full */
+.tfsp-message-input {
+    min-height: 72px;
+    resize: vertical;
+    overflow-y: auto;
+}
+
+.tfsp-settings-popup .tfsp-interface-header {
+    flex-shrink: 0;
+}
+
+.tfsp-settings-popup .tfsp-tab-content-wrapper {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: none;
+}
+
+.tfsp-popup-footer {
+    flex-shrink: 0;
+    padding: 16px 20px;
+    border-top: 1px solid var(--tfsp-border-light);
+}
+
+.tfsp-popup-footer .tfsp-save-btn {
+    width: 100%;
+}
+
+/* Lock screen touches */
+.tfsp-overlay-tip-label {
+    color: var(--tfsp-gold);
+}
+
+.tfsp-connected-players-pill {
+    color: var(--tfsp-slate);
+    border: none;
+}
+
+.tfsp-status-dot,
+.tfsp-status-dot.tfsp-status-waiting {
+    box-shadow: none;
+}
+
+/* GM lock indicator styles (Settings > General > Lock Indicator) */
+.tfsp-gm-banner.tfsp-banner-compact {
+    left: 50%;
+    right: auto;
+    width: max-content;
+    max-width: calc(100vw - 24px);
+    transform: translateX(-50%);
+    border-radius: var(--tfsp-radius-full);
+    padding: 0 16px 0 8px;
+}
+
+.tfsp-banner-compact .tfsp-banner-hint {
+    display: none;
+}
+
+.tfsp-lock-frame {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 98;
+    box-sizing: border-box;
+    border: 4px solid rgba(239, 68, 68, 0.7);
+    pointer-events: none;
+}

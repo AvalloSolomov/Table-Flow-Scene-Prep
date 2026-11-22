@@ -208,6 +208,18 @@ window.TableFlowScenePrep.DOMHelpers = class {
     }
     
     /**
+     * Width (px) taken by Foundry's right-hand sidebar, so lock UI can stay clear of it.
+     * Measured live because the sidebar can be collapsed or resized. Returns 0 when absent.
+     * @returns {number}
+     */
+    static getRightSidebarInset() {
+        const sidebar = document.getElementById('sidebar') || document.getElementById('ui-right');
+        const rect = sidebar?.getBoundingClientRect();
+        if (!rect || !rect.width) return 0;
+        return Math.max(0, Math.round(window.innerWidth - rect.left));
+    }
+    
+    /**
      * Get active player information
      * @returns {Object} Player counts and lists
      */

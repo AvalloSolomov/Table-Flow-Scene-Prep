@@ -7,6 +7,7 @@ window.TableFlowScenePrep = window.TableFlowScenePrep || {};
 
 window.TableFlowScenePrep.Settings = class {
     static MODULE_ID = 'table-flow-scene-prep';
+    static LOCK_INDICATORS = ['bar', 'compact', 'frame', 'bar-frame'];
     
     /**
      * Register all module settings
@@ -100,7 +101,16 @@ window.TableFlowScenePrep.Settings = class {
                 scope: 'world',
                 config: false,
                 type: String,
-                default: '',
+                default: [
+                    'A familiar can deliver your touch spells for you, even Inflict Wounds, so your owl can do the stabbing.',
+                    'Taking damage while concentrating forces a Constitution save: DC 10, or half the damage if that is higher.',
+                    'Opportunity attacks only trigger when you leave reach by your own movement. Being shoved or teleported is free.',
+                    'Stabilising a dying friend is a DC 10 Medicine check. No healing magic required.',
+                    'Dropping prone is free, but standing back up costs half your movement. Plan your dramatic collapses.',
+                    'Falling damage stops at 20d6, so the floor has a speed limit on how dead it can make you.',
+                    'A Portable Hole inside a Bag of Holding tears a rift to the Astral Plane. Please do not test it.',
+                    'A 10-foot pole costs 5 copper and has saved more adventurers than any spell.'
+                ].join('\n'),
                 onChange: () => this._syncLockScreenTips()
             });
             
@@ -112,6 +122,16 @@ window.TableFlowScenePrep.Settings = class {
                 type: String,
                 default: 'Tips & Trivia',
                 onChange: () => this._syncLockScreenTips()
+            });
+            
+            game.settings.register(this.MODULE_ID, 'lockIndicator', {
+                name: 'GM Lock Indicator',
+                hint: 'How the GM is shown that the session is locked: bar, compact pill, screen frame, or bar and frame',
+                scope: 'client',
+                config: false,
+                type: String,
+                default: 'bar',
+                onChange: () => this._refreshLockIndicator()
             });
             
             // Players can't read journals they lack permission on, so the GM publishes a copy here
@@ -253,6 +273,22 @@ window.TableFlowScenePrep.Settings = class {
     }
 
     /**
+     * Get the GM lock indicator style, falling back to the bar for unknown values
+     * @returns {'bar'|'compact'|'frame'|'bar-frame'}
+     */
+    static getLockIndicator() {
+        const style = game.settings.get(this.MODULE_ID, 'lockIndicator');
+        return this.LOCK_INDICATORS.includes(style) ? style : 'bar';
+    }
+
+    /**
+     * @param {string} style
+     */
+    static async setLockIndicator(style) {
+        await game.settings.set(this.MODULE_ID, 'lockIndicator', this.LOCK_INDICATORS.includes(style) ? style : 'bar');
+    }
+
+    /**
      * Get the heading for the tips box (falls back to the default when blank)
      * @returns {string}
      */
@@ -369,6 +405,15 @@ window.TableFlowScenePrep.Settings = class {
 
         // Ensure late or desynced clients still get the overlay while locked.
         window.TableFlowScenePrep.PlayerOverlay.show(message);
+    }
+
+    /**
+     * Rebuild the GM lock indicator when its style changes while locked.
+     * @private
+     */
+    static _refreshLockIndicator() {
+        if (!game.user?.isGM || !this.isLocked()) return;
+        window.TableFlowScenePrep.GMBanner?.show();
     }
 
     /**

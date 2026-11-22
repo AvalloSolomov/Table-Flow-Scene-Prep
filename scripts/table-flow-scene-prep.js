@@ -105,6 +105,14 @@ Hooks.on('userConnected', (user) => {
     }, 800);
 });
 
+// Keep the lock screen's player list live for everyone waiting
+Hooks.on('userConnected', () => {
+    setTimeout(() => window.TableFlowScenePrep?.PlayerOverlay?.refreshPlayers(), 500);
+});
+Hooks.on('userDisconnected', () => {
+    setTimeout(() => window.TableFlowScenePrep?.PlayerOverlay?.refreshPlayers(), 500);
+});
+
 Hooks.on('userDisconnected', () => {
     if (game.user.isGM && window.TableFlowScenePrep?.FloatingButton?.button) {
         window.TableFlowScenePrep.FloatingButton.updateState();

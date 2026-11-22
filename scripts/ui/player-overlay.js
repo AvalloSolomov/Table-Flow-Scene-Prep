@@ -7,9 +7,6 @@ window.TableFlowScenePrep = window.TableFlowScenePrep || {};
 
 window.TableFlowScenePrep.PlayerOverlay = class {
     static OVERLAY_ID = 'table-flow-scene-prep-overlay';
-    static simpleQuestObserver = null;
-    static simpleQuestKeyListener = null;
-    static SIMPLE_QUEST_CLASS = 'tfsp-allow-above-overlay';
     static TIP_ROTATE_MS = 10000;
     static TIP_FADE_MS = 400;
     static tipInterval = null;
@@ -41,10 +38,12 @@ window.TableFlowScenePrep.PlayerOverlay = class {
         overlay.innerHTML = this._generateOverlayHTML(displayMessage, currentPlayer, otherWaitingPlayers, playerInfo.onlineCount, journalContent, tips);
         
         document.body.appendChild(overlay);
+        this._applySidebarInset();
+        window.addEventListener('resize', this._boundInset ??= () => this._applySidebarInset());
         this._startTipRotation(tips);
+        // Presence can still be settling when a client first loads
+        setTimeout(() => this.refreshPlayers(), 1500);
 
-        // Keep Simple Quest journal windows usable while overlay is active
-        this._startSimpleQuestBypass();
         
         // Only enable dragging for GMs
         if (game.user.isGM) {
@@ -53,6 +52,39 @@ window.TableFlowScenePrep.PlayerOverlay = class {
         
     }
     
+    /**
+     * GMs can see the overlay too; it must never cover Foundry's right sidebar
+     * @private
+     */
+    static _applySidebarInset() {
+        const overlay = document.getElementById(this.OVERLAY_ID);
+        if (!overlay || !game.user.isGM) return;
+        const inset = window.TableFlowScenePrep.DOMHelpers.getRightSidebarInset();
+        overlay.style.width = inset > 0 ? 'auto' : '';
+        overlay.style.right = inset > 0 ? `${inset}px` : '';
+    }
+    
+    /**
+     * Re-render the connected/waiting player list in place
+     */
+    static refreshPlayers() {
+        const overlay = document.getElementById(this.OVERLAY_ID);
+        if (!overlay) return;
+
+        const playerInfo = window.TableFlowScenePrep.DOMHelpers.getPlayerInfo();
+        const others = playerInfo.online.filter(u => u.id !== game.user.id);
+
+        const pill = overlay.querySelector('.tfsp-connected-players-pill');
+        if (pill) pill.textContent = `${playerInfo.onlineCount} Connected`;
+
+        const card = overlay.querySelector('.tfsp-player-count');
+        if (!card) return;
+        card.querySelectorAll('.tfsp-player-name').forEach(el => el.remove());
+        card.insertAdjacentHTML('beforeend', others.length
+            ? others.map(p => `<div class="tfsp-player-name">${window.TableFlowScenePrep.DOMHelpers.escapeHTML(p.name)}</div>`).join('')
+            : '<div class="tfsp-player-name">Just you</div>');
+    }
+
     /**
      * Hide the player overlay
      */
@@ -63,7 +95,6 @@ window.TableFlowScenePrep.PlayerOverlay = class {
         }
 
         this._stopTipRotation();
-        this._stopSimpleQuestBypass();
     }
     
     /**
@@ -275,122 +306,6 @@ window.TableFlowScenePrep.PlayerOverlay = class {
                 </div>
             </div>
         `;
-    }
-    
-    /**
-     * Keep Simple Quest journal windows above the lock overlay
-     * @private
-     */
-    static _startSimpleQuestBypass() {
-        this._elevateSimpleQuestWindows();
-
-        if (!this.simpleQuestObserver) {
-            this.simpleQuestObserver = new MutationObserver(() => {
-                this._elevateSimpleQuestWindows();
-            });
-
-            this.simpleQuestObserver.observe(document.body, {
-                childList: true,
-                subtree: true,
-                attributes: true,
-                attributeFilter: ['class']
-            });
-        }
-
-        if (!this.simpleQuestKeyListener) {
-            this.simpleQuestKeyListener = (event) => {
-                if (String(event.key).toLowerCase() !== 'j') return;
-
-                // Let the Simple Quest hotkey handler run, then elevate the app window
-                setTimeout(() => this._elevateSimpleQuestWindows(), 0);
-                setTimeout(() => this._elevateSimpleQuestWindows(), 100);
-                setTimeout(() => this._elevateLatestAppWindow(), 0);
-                setTimeout(() => this._elevateLatestAppWindow(), 100);
-                setTimeout(() => this._elevateLatestAppWindow(), 250);
-            };
-
-            document.addEventListener('keydown', this.simpleQuestKeyListener, true);
-        }
-    }
-
-    /**
-     * Cleanup journal bypass listeners and classes
-     * @private
-     */
-    static _stopSimpleQuestBypass() {
-        if (this.simpleQuestObserver) {
-            this.simpleQuestObserver.disconnect();
-            this.simpleQuestObserver = null;
-        }
-
-        if (this.simpleQuestKeyListener) {
-            document.removeEventListener('keydown', this.simpleQuestKeyListener, true);
-            this.simpleQuestKeyListener = null;
-        }
-
-        document.querySelectorAll(`.${this.SIMPLE_QUEST_CLASS}`).forEach((el) => {
-            el.classList.remove(this.SIMPLE_QUEST_CLASS);
-        });
-    }
-
-    /**
-     * Detect and elevate Simple Quest windows above the lock overlay
-     * @private
-     */
-    static _elevateSimpleQuestWindows() {
-        const windows = document.querySelectorAll('.window-app, .application');
-        windows.forEach((win) => {
-            if (this._isSimpleQuestWindow(win)) {
-                win.classList.add(this.SIMPLE_QUEST_CLASS);
-            }
-        });
-
-        // Fallback: if no direct marker matched, elevate the most recent app window.
-        const hasElevatedWindow = document.querySelector(`.${this.SIMPLE_QUEST_CLASS}`);
-        if (!hasElevatedWindow) {
-            this._elevateLatestAppWindow();
-        }
-    }
-
-    /**
-     * Elevate the currently top-most app window as a fallback.
-     * @private
-     */
-    static _elevateLatestAppWindow() {
-        const windows = Array.from(document.querySelectorAll('.window-app, .application'))
-            .filter((el) => !el.closest(`#${this.OVERLAY_ID}`));
-
-        if (windows.length === 0) return;
-
-        const getNumericZIndex = (el) => {
-            const z = Number.parseInt(window.getComputedStyle(el).zIndex, 10);
-            return Number.isNaN(z) ? 0 : z;
-        };
-
-        windows.sort((a, b) => getNumericZIndex(b) - getNumericZIndex(a));
-        windows[0].classList.add(this.SIMPLE_QUEST_CLASS);
-    }
-
-    /**
-     * Best-effort detection for Simple Quest app windows
-     * @param {HTMLElement} win
-     * @returns {boolean}
-     * @private
-     */
-    static _isSimpleQuestWindow(win) {
-        const classText = (win.className || '').toLowerCase();
-        const idText = (win.id || '').toLowerCase();
-        const appIdText = (win.dataset?.appid || '').toLowerCase();
-        const titleText = (win.querySelector('.window-title')?.textContent || '').toLowerCase();
-        const combined = `${classText} ${idText} ${appIdText} ${titleText}`;
-
-        const hasSimpleQuestMarker =
-            combined.includes('simplequest') ||
-            combined.includes('simple quest') ||
-            combined.includes('simple-quest') ||
-            combined.includes('ripper');
-
-        return hasSimpleQuestMarker;
     }
     
     /**

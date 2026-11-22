@@ -7,6 +7,7 @@ window.TableFlowScenePrep = window.TableFlowScenePrep || {};
 
 window.TableFlowScenePrep.GMInterface = class {
     static INTERFACE_ID = 'table-flow-scene-prep-interface';
+    static SETTINGS_ID = 'table-flow-scene-prep-settings';
     
     /**
      * Show the GM control interface
@@ -25,15 +26,81 @@ window.TableFlowScenePrep.GMInterface = class {
         gmInterface.innerHTML = this._generateHTML(isLocked, message, playerInfo);
         
         document.body.appendChild(gmInterface);
+        this._makeWindowDraggable(gmInterface);
         this._attachEventListeners();
         
     }
     
     /**
-     * Hide the interface
+     * Hide the interface (and its settings popup)
      */
     static hide() {
+        this.closeSettings();
         window.TableFlowScenePrep.DOMHelpers.removeElement(this.INTERFACE_ID);
+    }
+    
+    /**
+     * Open the Settings popup, or close it if it is already open
+     */
+    static toggleSettings() {
+        if (document.getElementById(this.SETTINGS_ID)) {
+            this.closeSettings();
+            return;
+        }
+        
+        const popup = document.createElement('div');
+        popup.id = this.SETTINGS_ID;
+        popup.className = 'tfsp-gm-interface tfsp-settings-popup';
+        popup.innerHTML = this._generateSettingsHTML(window.TableFlowScenePrep.Settings.getLockoutMessage());
+        document.body.appendChild(popup);
+        this._makeWindowDraggable(popup);
+        
+        document.getElementById('gm-interface-settings')?.classList.add('tfsp-header-btn-active');
+        this._attachSettingsListeners();
+    }
+    
+    /**
+     * Let the GM drag a window by its header. The window switches from its centred CSS
+     * position to explicit left/top on the first drag and is kept on screen.
+     * @private
+     */
+    static _makeWindowDraggable(win) {
+        const handle = win?.querySelector('.tfsp-interface-header');
+        if (!handle) return;
+        handle.classList.add('tfsp-drag-header');
+        
+        handle.addEventListener('mousedown', (e) => {
+            if (e.button !== 0 || e.target.closest('button, a, input, select, textarea')) return;
+            e.preventDefault();
+            
+            const rect = win.getBoundingClientRect();
+            const shiftX = e.clientX - rect.left;
+            const shiftY = e.clientY - rect.top;
+            win.style.transform = 'none';
+            win.style.left = `${rect.left}px`;
+            win.style.top = `${rect.top}px`;
+            
+            const onMove = (ev) => {
+                const left = Math.max(0, Math.min(window.innerWidth - rect.width, ev.clientX - shiftX));
+                const top = Math.max(0, Math.min(window.innerHeight - 48, ev.clientY - shiftY));
+                win.style.left = `${left}px`;
+                win.style.top = `${top}px`;
+            };
+            const onUp = () => {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+            };
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        });
+    }
+    
+    /**
+     * Close the Settings popup
+     */
+    static closeSettings() {
+        window.TableFlowScenePrep.DOMHelpers.removeElement(this.SETTINGS_ID);
+        document.getElementById('gm-interface-settings')?.classList.remove('tfsp-header-btn-active');
     }
     
     /**
@@ -118,19 +185,39 @@ window.TableFlowScenePrep.GMInterface = class {
                         </div>
                     </div>
                 </div>
-                
-                <!-- Settings View -->
-                <div id="tab-settings-content" class="tfsp-tab-content">
-                    <div class="tfsp-section-heading">
-                        <i class="fas fa-cog" aria-hidden="true"></i>
-                        <span>Settings</span>
-                        <button type="button" id="gm-settings-back" class="tfsp-back-btn"><i class="fas fa-arrow-left" aria-hidden="true"></i> Back to Scene Prep</button>
+            </div>
+        `;
+    }
+    
+    /**
+     * Generate the Settings popup HTML
+     * @private
+     */
+    static _generateSettingsHTML(message) {
+        return `
+            <div class="tfsp-interface-header">
+                <div class="tfsp-header-content">
+                    <div class="tfsp-header-left">
+                        <div>
+                            <h2 class="tfsp-interface-title">Settings</h2>
+                            <div class="tfsp-interface-subtitle">Lock screen and general options</div>
+                        </div>
                     </div>
-                    
-                    <div class="tfsp-subnav" role="tablist">
-                        <button type="button" class="tfsp-subnav-btn tfsp-subnav-active" data-subtab="lockscreen"><i class="fas fa-lock" aria-hidden="true"></i><span>Lock Screen</span></button>
-                        <button type="button" class="tfsp-subnav-btn" data-subtab="general"><i class="fas fa-sliders-h" aria-hidden="true"></i><span>General</span></button>
+                    <div class="tfsp-header-buttons">
+                        <button id="gm-settings-close" class="tfsp-header-btn" title="Close">×</button>
                     </div>
+                </div>
+            </div>
+            
+            <div class="tfsp-popup-tabs">
+                <div class="tfsp-subnav" role="tablist">
+                    <button type="button" class="tfsp-subnav-btn tfsp-subnav-active" data-subtab="lockscreen"><i class="fas fa-lock" aria-hidden="true"></i><span>Lock Screen</span></button>
+                    <button type="button" class="tfsp-subnav-btn" data-subtab="general"><i class="fas fa-sliders-h" aria-hidden="true"></i><span>General</span></button>
+                </div>
+            </div>
+            
+            <div class="tfsp-tab-content-wrapper">
+                <div id="tab-settings-content">
                     
                     <div class="tfsp-subpanel tfsp-subpanel-active" data-subpanel="lockscreen">
                     
@@ -155,19 +242,29 @@ window.TableFlowScenePrep.GMInterface = class {
                     
                     <div class="tfsp-subpanel" data-subpanel="general">
                     <div class="tfsp-settings-section">
-                        <h3 class="tfsp-settings-header">Banner Settings</h3>
+                        <h3 class="tfsp-settings-header">Lock Indicator</h3>
                         
                         <div class="tfsp-setting-item">
                             <label class="tfsp-setting-label">
                                 <input type="checkbox" id="setting-show-banner" ${window.TableFlowScenePrep.Settings.getShowBanner() ? 'checked' : ''}>
-                                <span>Show Lock Banner</span>
+                                <span>Show Lock Indicator</span>
                             </label>
-                            <div class="tfsp-setting-hint">Display a prominent banner when session is locked</div>
+                            <div class="tfsp-setting-hint">Show the GM when the session is locked</div>
+                        </div>
+                        
+                        <div class="tfsp-setting-item">
+                            <label class="tfsp-setting-label" for="setting-lock-indicator">
+                                <span>Indicator Style</span>
+                            </label>
+                            <div class="tfsp-setting-hint">How the lock shows on your screen (players always get the full-screen lock)</div>
+                            <select id="setting-lock-indicator" class="tfsp-setting-input">
+                                ${[['bar', 'Bar (click to unlock)'], ['compact', 'Compact pill'], ['frame', 'Screen frame'], ['bar-frame', 'Bar and frame']].map(([value, label]) => `<option value="${value}" ${window.TableFlowScenePrep.Settings.getLockIndicator() === value ? 'selected' : ''}>${label}</option>`).join('')}
+                            </select>
                         </div>
                         
                         <div class="tfsp-setting-item">
                             <label class="tfsp-setting-label">
-                                <span>Banner Top Position (px)</span>
+                                <span>Bar Top Position (px)</span>
                             </label>
                             <div class="tfsp-setting-hint">Distance from the top of the screen</div>
                             <input type="number" id="setting-banner-position" class="tfsp-setting-input" min="0" max="300" step="10" value="${window.TableFlowScenePrep.Settings.getBannerTopPosition()}">
@@ -217,7 +314,7 @@ window.TableFlowScenePrep.GMInterface = class {
                         </div>
                     </div>
                     
-                    <div class="tfsp-settings-section">
+                    <div class="tfsp-settings-section tfsp-tips-section">
                         <h3 class="tfsp-settings-header">Lock Screen Tips</h3>
                         
                         <div class="tfsp-setting-item">
@@ -227,16 +324,18 @@ window.TableFlowScenePrep.GMInterface = class {
                             <input type="text" id="setting-lock-tips-title" class="tfsp-setting-input" maxlength="40" placeholder="Tips & Trivia" value="${window.TableFlowScenePrep.DOMHelpers.escapeHTML(window.TableFlowScenePrep.Settings.getLockScreenTipsTitle())}">
                         </div>
                         
-                        <div class="tfsp-setting-item">
-                            <div class="tfsp-setting-hint">One tip or piece of trivia per bullet (press Enter for the next one). You can also paste a whole list - each line becomes its own tip, blank lines are ignored. They show in random order on the players' lock screen, without the bullets. Keep each to about two lines (roughly 170 characters) - longer ones are cut off. Leave empty to hide the section.</div>
-                            <textarea id="setting-lock-tips" class="tfsp-message-input" rows="6" placeholder="• Did you know the tavern keeper used to be an adventurer?">${window.TableFlowScenePrep.DOMHelpers.escapeHTML(this._bulletTips(window.TableFlowScenePrep.Settings.getLockScreenTips()))}</textarea>
+                        <div class="tfsp-setting-item tfsp-tips-item">
+                            <div class="tfsp-setting-hint">One tip per bullet (press Enter for the next). Pasted lists split automatically. Keep each under about 170 characters. Leave empty to hide the section.</div>
+                            <textarea id="setting-lock-tips" class="tfsp-message-input" rows="6" placeholder="• A familiar can deliver your touch spells for you, even Inflict Wounds.">${window.TableFlowScenePrep.DOMHelpers.escapeHTML(this._bulletTips(window.TableFlowScenePrep.Settings.getLockScreenTips()))}</textarea>
                         </div>
                     </div>
                     
                     </div>
-                    
-                    <button id="save-settings-button" class="tfsp-save-btn">Save Settings</button>
                 </div>
+            </div>
+            
+            <div class="tfsp-popup-footer">
+                <button id="save-settings-button" class="tfsp-save-btn">Save Settings</button>
             </div>
         `;
     }
@@ -433,14 +532,29 @@ window.TableFlowScenePrep.GMInterface = class {
             await this._handleUnlock();
         });
         
-        // Save message button
-        document.getElementById('save-message-button')?.addEventListener('click', async () => {
-            await this._handleSaveMessage();
-        });
-
         // Resync lock screens button
         document.getElementById('gm-resync-lock-button')?.addEventListener('click', async () => {
             await this._handleResyncLockScreens();
+        });
+        
+        // Gear button opens the Settings popup
+        document.getElementById('gm-interface-settings')?.addEventListener('click', () => {
+            this.toggleSettings();
+        });
+    }
+    
+    /**
+     * Attach listeners for the Settings popup
+     * @private
+     */
+    static _attachSettingsListeners() {
+        document.getElementById('gm-settings-close')?.addEventListener('click', () => {
+            this.closeSettings();
+        });
+        
+        // Save message button
+        document.getElementById('save-message-button')?.addEventListener('click', async () => {
+            await this._handleSaveMessage();
         });
         
         // Save settings button
@@ -504,17 +618,16 @@ window.TableFlowScenePrep.GMInterface = class {
             await this._handleJournalDrop(TextEditorImpl.getDragEventData(e));
         });
         
-        // View switching (Control <-> Settings)
-        this._setupViews();
+        // Sub-menu tabs
         this._setupSubmenus();
     }
     
     /**
-     * Switch between the Settings sub-menus (General / Notes)
+     * Switch between the Settings sub-menus (Lock Screen / General)
      * @private
      */
     static _setupSubmenus() {
-        const view = document.getElementById('tab-settings-content');
+        const view = document.getElementById(this.SETTINGS_ID);
         view?.querySelector('.tfsp-subnav')?.addEventListener('click', (e) => {
             const btn = e.target.closest('.tfsp-subnav-btn');
             if (!btn) return;
@@ -522,26 +635,6 @@ window.TableFlowScenePrep.GMInterface = class {
             view.querySelectorAll('.tfsp-subnav-btn').forEach(b => b.classList.toggle('tfsp-subnav-active', b === btn));
             view.querySelectorAll('.tfsp-subpanel').forEach(p => p.classList.toggle('tfsp-subpanel-active', p.dataset.subpanel === btn.dataset.subtab));
         });
-    }
-    
-    /**
-     * Switch between the Control and Settings views (gear button toggles, Back returns)
-     * @private
-     */
-    static _setupViews() {
-        const showSettings = (show) => {
-            document.getElementById('tab-control-content')?.classList.toggle('tfsp-tab-active', !show);
-            document.getElementById('tab-settings-content')?.classList.toggle('tfsp-tab-active', show);
-            document.getElementById('gm-interface-settings')?.classList.toggle('tfsp-header-btn-active', show);
-            document.querySelector('.tfsp-tab-content-wrapper')?.scrollTo(0, 0);
-        };
-        
-        document.getElementById('gm-interface-settings')?.addEventListener('click', () => {
-            const showingSettings = document.getElementById('tab-settings-content')?.classList.contains('tfsp-tab-active');
-            showSettings(!showingSettings);
-        });
-        
-        document.getElementById('gm-settings-back')?.addEventListener('click', () => showSettings(false));
     }
     
     /**
@@ -653,6 +746,7 @@ window.TableFlowScenePrep.GMInterface = class {
         await window.TableFlowScenePrep.Settings.setBannerTopPosition(bannerPosition);
         await window.TableFlowScenePrep.Settings.setAutoLock(autoLock);
         await window.TableFlowScenePrep.Settings.setButtonAnchor(buttonAnchor);
+        await window.TableFlowScenePrep.Settings.setLockIndicator(document.getElementById('setting-lock-indicator')?.value ?? 'bar');
         await window.TableFlowScenePrep.Settings.setLockScreenTips(lockTips);
         await window.TableFlowScenePrep.Settings.setLockScreenTipsTitle(lockTipsTitle);
 

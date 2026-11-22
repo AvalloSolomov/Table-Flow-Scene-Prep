@@ -3,6 +3,7 @@
  */
 class GMBanner {
     static BANNER_ID = 'table-flow-scene-prep-gm-banner';
+    static FRAME_ID = 'table-flow-scene-prep-gm-frame';
     
     /**
      * Show the GM banner at the top of the screen
@@ -27,11 +28,29 @@ class GMBanner {
         
         // Get banner position from settings
         const topPosition = window.TableFlowScenePrep.Settings.getBannerTopPosition();
+        const indicator = window.TableFlowScenePrep.Settings.getLockIndicator();
+        
+        if (indicator === 'frame' || indicator === 'bar-frame') {
+            const frame = document.createElement('div');
+            frame.id = this.FRAME_ID;
+            frame.className = 'tfsp-lock-frame';
+            document.body.appendChild(frame);
+            this._applySidebarInset();
+            window.addEventListener('resize', this._boundInset ??= () => this._applySidebarInset());
+            // Follow the sidebar as it is collapsed, expanded or resized
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar && typeof ResizeObserver !== 'undefined') {
+                this._sidebarObserver?.disconnect();
+                this._sidebarObserver = new ResizeObserver(() => this._applySidebarInset());
+                this._sidebarObserver.observe(sidebar);
+            }
+        }
+        if (indicator === 'frame') return;
         
         // Create banner element
         const banner = document.createElement('div');
         banner.id = this.BANNER_ID;
-        banner.className = 'tfsp-gm-banner';
+        banner.className = `tfsp-gm-banner${indicator === 'compact' ? ' tfsp-banner-compact' : ''}`;
         banner.style.top = `${topPosition}px`;
         
         banner.innerHTML = `
@@ -46,6 +65,8 @@ class GMBanner {
         `;
         
         document.body.appendChild(banner);
+        this._applySidebarInset();
+        window.addEventListener('resize', this._boundInset ??= () => this._applySidebarInset());
         
         // Initialize dragging FIRST
         this._initializeDragging(banner, topPosition);
@@ -69,15 +90,35 @@ class GMBanner {
         if (existingBanner) {
             existingBanner.remove();
         }
+        document.getElementById(this.FRAME_ID)?.remove();
+        this._sidebarObserver?.disconnect();
         
         // Restore original title
         document.title = document.title.replace('🔒 LOCKED - ', '');
     }
     
     /**
+     * Keep the banner and frame clear of Foundry's right sidebar
+     */
+    static _applySidebarInset() {
+        const inset = window.TableFlowScenePrep.DOMHelpers.getRightSidebarInset();
+        const frame = document.getElementById(this.FRAME_ID);
+        if (frame) frame.style.right = inset > 0 ? `${inset}px` : '';
+        
+        const banner = document.getElementById(this.BANNER_ID);
+        if (!banner) return;
+        if (banner.classList.contains('tfsp-banner-compact')) {
+            banner.style.left = `calc((100% - ${inset}px) / 2)`;
+            return;
+        }
+        banner.style.right = inset > 0 ? `${inset + 12}px` : '';
+    }
+    
+    /**
      * Update the player count on the banner
      */
     static updateCount() {
+        this._applySidebarInset();
         const banner = document.getElementById(this.BANNER_ID);
         if (!banner) return;
         
