@@ -22,12 +22,9 @@
 .tfsp-icon-clock { --tfsp-icon: url('../icons/clock.svg'); }
 .tfsp-icon-sliders-horizontal { --tfsp-icon: url('../icons/sliders-horizontal.svg'); }
 .tfsp-icon-book-open { --tfsp-icon: url('../icons/book-open.svg'); }
-.tfsp-icon-circle-dot { --tfsp-icon: url('../icons/circle-dot.svg'); }
-.tfsp-icon-flag { --tfsp-icon: url('../icons/flag.svg'); }
-.tfsp-icon-gauge { --tfsp-icon: url('../icons/gauge.svg'); }
-.tfsp-icon-lightbulb { --tfsp-icon: url('../icons/lightbulb.svg'); }
 .tfsp-icon-settings { --tfsp-icon: url('../icons/settings.svg'); }
-.tfsp-icon-arrow-left { --tfsp-icon: url('../icons/arrow-left.svg'); }
+.tfsp-icon-minus { --tfsp-icon: url('../icons/minus.svg'); }
+.tfsp-icon-x { --tfsp-icon: url('../icons/x.svg'); }
 
 :root {
     --tfsp-bg-main: #171717;
@@ -776,8 +773,12 @@
 
 .tfsp-journal-clear {
     flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 24px;
     height: 24px;
+    font-size: 14px;
     line-height: 1;
     padding: 0;
     background: rgba(255, 255, 255, 0.08);
@@ -906,47 +907,6 @@
     position: relative;
     z-index: 2;
     overflow: visible;
-}
-
-/* Drag Handle */
-.tfsp-drag-handle {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    cursor: grab;
-    z-index: 10;
-    padding: 8px;
-    border-radius: 24px 24px 0 0;
-}
-
-.tfsp-drag-handle:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.tfsp-drag-handle:active {
-    cursor: grabbing;
-}
-
-.tfsp-drag-indicator {
-    width: 20px;
-    height: 3px;
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 2px;
-}
-
-.tfsp-drag-handle:hover .tfsp-drag-indicator {
-    background-color: rgba(255, 255, 255, 0.6);
-}
-
-.tfsp-rotating-gradient {
-    display: none;
 }
 
 .tfsp-overlay-content {

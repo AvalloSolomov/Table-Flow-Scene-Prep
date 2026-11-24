@@ -13,6 +13,7 @@ window.TableFlowScenePrep.GMInterface = class {
      * Show the GM control interface
      */
     static show() {
+        if (!game.user.isGM) return;
         this.hide(); // Remove existing
         
         const isLocked = window.TableFlowScenePrep.Settings.isLocked();
@@ -125,9 +126,9 @@ window.TableFlowScenePrep.GMInterface = class {
                         </div>
                     </div>
                     <div class="tfsp-header-buttons">
-                        <button id="gm-interface-minimize" class="tfsp-header-btn" title="Minimize">−</button>
-                        <button id="gm-interface-settings" class="tfsp-header-btn" title="Settings">⚙</button>
-                        <button id="gm-interface-close" class="tfsp-header-btn" title="Close">×</button>
+                        <button id="gm-interface-minimize" class="tfsp-header-btn" title="Minimize" aria-label="Minimize"><i class="tfsp-icon tfsp-icon-minus" aria-hidden="true"></i></button>
+                        <button id="gm-interface-settings" class="tfsp-header-btn" title="Settings" aria-label="Settings"><i class="tfsp-icon tfsp-icon-settings" aria-hidden="true"></i></button>
+                        <button id="gm-interface-close" class="tfsp-header-btn" title="Close" aria-label="Close"><i class="tfsp-icon tfsp-icon-x" aria-hidden="true"></i></button>
                     </div>
                 </div>
             </div>
@@ -204,7 +205,7 @@ window.TableFlowScenePrep.GMInterface = class {
                         </div>
                     </div>
                     <div class="tfsp-header-buttons">
-                        <button id="gm-settings-close" class="tfsp-header-btn" title="Close">×</button>
+                        <button id="gm-settings-close" class="tfsp-header-btn" title="Close" aria-label="Close"><i class="tfsp-icon tfsp-icon-x" aria-hidden="true"></i></button>
                     </div>
                 </div>
             </div>
@@ -233,7 +234,7 @@ window.TableFlowScenePrep.GMInterface = class {
                                 class="tfsp-message-input"
                                 rows="3"
                                 placeholder="Enter the message players will see..."
-                            >${message}</textarea>
+                            >${window.TableFlowScenePrep.DOMHelpers.escapeHTML(message)}</textarea>
                             <button id="save-message-button" class="tfsp-save-btn">Save Message</button>
                         </div>
                     </div>
@@ -326,7 +327,7 @@ window.TableFlowScenePrep.GMInterface = class {
                         
                         <div class="tfsp-setting-item tfsp-tips-item">
                             <div class="tfsp-setting-hint">One tip per bullet (press Enter for the next). Pasted lists split automatically. Keep each under about 170 characters. Leave empty to hide the section.</div>
-                            <textarea id="setting-lock-tips" class="tfsp-message-input" rows="6" placeholder="• A familiar can deliver your touch spells for you, even Inflict Wounds.">${window.TableFlowScenePrep.DOMHelpers.escapeHTML(this._bulletTips(window.TableFlowScenePrep.Settings.getLockScreenTips()))}</textarea>
+                            <textarea id="setting-lock-tips" class="tfsp-message-input" rows="6" placeholder="• Check your character sheet before the session starts.">${window.TableFlowScenePrep.DOMHelpers.escapeHTML(this._bulletTips(window.TableFlowScenePrep.Settings.getLockScreenTips()))}</textarea>
                         </div>
                     </div>
                     
@@ -376,7 +377,7 @@ window.TableFlowScenePrep.GMInterface = class {
         const label = this._journalLabel(entry, page);
         return `
             <span class="tfsp-journal-current-name"><i class="tfsp-icon tfsp-icon-book-open" aria-hidden="true"></i> ${escape(label)}</span>
-            <button type="button" class="tfsp-journal-clear" title="Remove linked journal">&times;</button>
+            <button type="button" class="tfsp-journal-clear" title="Remove linked journal" aria-label="Remove linked journal"><i class="tfsp-icon tfsp-icon-x" aria-hidden="true"></i></button>
         `;
     }
     
@@ -426,7 +427,7 @@ window.TableFlowScenePrep.GMInterface = class {
         } else {
             const shown = matches.slice(0, MAX_RESULTS);
             container.innerHTML = shown.map(m => `
-                <button type="button" class="tfsp-journal-result" data-entry-id="${m.entryId}" data-page-id="${m.pageId}">${escape(m.label)}</button>
+                <button type="button" class="tfsp-journal-result" data-entry-id="${escape(m.entryId)}" data-page-id="${escape(m.pageId)}">${escape(m.label)}</button>
             `).join('') + (matches.length > MAX_RESULTS
                 ? `<div class="tfsp-setting-hint">Showing ${MAX_RESULTS} of ${matches.length} - keep typing to narrow it down</div>`
                 : '');
@@ -499,7 +500,7 @@ window.TableFlowScenePrep.GMInterface = class {
                 <div class="tfsp-player-item ${statusClass}">
                     <div class="tfsp-player-info">
                         <div class="tfsp-player-dot"></div>
-                        <div class="tfsp-player-name">${player.name}</div>
+                        <div class="tfsp-player-name">${window.TableFlowScenePrep.DOMHelpers.escapeHTML(player.name)}</div>
                     </div>
                     <div class="tfsp-player-status">${statusText}</div>
                 </div>
