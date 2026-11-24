@@ -92,6 +92,12 @@ class GMBanner {
         }
         document.getElementById(this.FRAME_ID)?.remove();
         this._sidebarObserver?.disconnect();
+        this._dragCleanup?.();
+        this._dragCleanup = null;
+        if (this._boundInset) {
+            window.removeEventListener('resize', this._boundInset);
+            this._boundInset = null;
+        }
         
         // Restore original title
         document.title = document.title.replace('🔒 LOCKED - ', '');
@@ -223,6 +229,13 @@ class GMBanner {
         dragHandle.addEventListener('touchstart', handleDragStart, { passive: false });
         document.addEventListener('touchmove', handleDragMove, { passive: false });
         document.addEventListener('touchend', handleDragEnd);
+
+        this._dragCleanup = () => {
+            document.removeEventListener('mousemove', handleDragMove);
+            document.removeEventListener('mouseup', handleDragEnd);
+            document.removeEventListener('touchmove', handleDragMove);
+            document.removeEventListener('touchend', handleDragEnd);
+        };
     }
 
     /**

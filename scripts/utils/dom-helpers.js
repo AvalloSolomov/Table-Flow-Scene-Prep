@@ -7,34 +7,6 @@ window.TableFlowScenePrep = window.TableFlowScenePrep || {};
 
 window.TableFlowScenePrep.DOMHelpers = class {
     /**
-     * Create an element with specified attributes and styles
-     * @param {string} tag - Element tag name
-     * @param {Object} options - Configuration options
-     * @returns {HTMLElement}
-     */
-    static createElement(tag, options = {}) {
-        const element = document.createElement(tag);
-        
-        if (options.id) element.id = options.id;
-        if (options.className) element.className = options.className;
-        if (options.innerHTML) element.innerHTML = options.innerHTML;
-        if (options.textContent) element.textContent = options.textContent;
-        if (options.styles) Object.assign(element.style, options.styles);
-        if (options.attributes) {
-            Object.entries(options.attributes).forEach(([key, value]) => {
-                element.setAttribute(key, value);
-            });
-        }
-        if (options.events) {
-            Object.entries(options.events).forEach(([event, handler]) => {
-                element.addEventListener(event, handler);
-            });
-        }
-        
-        return element;
-    }
-    
-    /**
      * Remove element by ID if it exists
      * @param {string} id - Element ID
      */
@@ -48,32 +20,16 @@ window.TableFlowScenePrep.DOMHelpers = class {
     }
     
     /**
-     * Safely set innerHTML with text content fallback
-     * @param {HTMLElement} element - Target element
-     * @param {string} content - Content to set
-     * @param {boolean} sanitize - Whether to use textContent for safety
-     */
-    static setContent(element, content, sanitize = false) {
-        if (sanitize) {
-            element.textContent = content;
-        } else {
-            element.innerHTML = content;
-        }
-    }
-    
-    /**
      * Make an element draggable
      * @param {HTMLElement} element - Element to make draggable
      * @param {Function} onDragEnd - Callback when drag ends
      * @param {Function} onClick - Callback for click without drag
      */
     static makeDraggable(element, onDragEnd = null, onClick = null) {
-        let dragging = false;
         let moved = false;
         const originalTransition = element.style.transition;
         
         const handleMouseDown = function(e) {
-            dragging = true;
             moved = false;
             
             // Disable transitions during drag
@@ -96,12 +52,9 @@ window.TableFlowScenePrep.DOMHelpers = class {
                 moveAt(e.pageX, e.pageY);
             }
             
-            document.addEventListener('mousemove', onMouseMove);
-            
-            element.onmouseup = function() {
+            const onMouseUp = function() {
                 document.removeEventListener('mousemove', onMouseMove);
-                element.onmouseup = null;
-                dragging = false;
+                document.removeEventListener('mouseup', onMouseUp);
                 
                 // Restore transitions
                 element.style.transition = originalTransition;
@@ -112,6 +65,9 @@ window.TableFlowScenePrep.DOMHelpers = class {
                     onClick(element);
                 }
             };
+            
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
         };
 
         const handleDragStart = function() {
@@ -123,7 +79,6 @@ window.TableFlowScenePrep.DOMHelpers = class {
         
         return function cleanupDraggable() {
             element.removeEventListener('mousedown', handleMouseDown);
-            element.onmouseup = null;
             if (element.ondragstart === handleDragStart) {
                 element.ondragstart = null;
             }
@@ -207,6 +162,31 @@ window.TableFlowScenePrep.DOMHelpers = class {
             .replace(/'/g, '&#39;');
     }
     
+    /**
+     * Strip scripts, embedded content, inline event handlers and javascript: URLs from HTML
+     * before it is shown on the lock screen. Foundry's own enrichment is trusted for markup;
+     * this is a defensive second pass.
+     * @param {string} html
+     * @returns {string}
+     */
+    static sanitizeHTML(html) {
+        const template = document.createElement('template');
+        template.innerHTML = String(html ?? '');
+
+        template.content.querySelectorAll('script, iframe, object, embed, link, meta, base, form').forEach(el => el.remove());
+        template.content.querySelectorAll('*').forEach(el => {
+            for (const attr of Array.from(el.attributes)) {
+                const name = attr.name.toLowerCase();
+                const value = attr.value.replace(/[\u0000-\u0020]/g, '').toLowerCase();
+                if (name.startsWith('on') || (['href', 'src', 'xlink:href', 'action', 'formaction'].includes(name) && /^(javascript|vbscript|data:text\/html)/.test(value))) {
+                    el.removeAttribute(attr.name);
+                }
+            }
+        });
+
+        return template.innerHTML;
+    }
+
     /**
      * Width (px) taken by Foundry's right-hand sidebar, so lock UI can stay clear of it.
      * Measured live because the sidebar can be collapsed or resized. Returns 0 when absent.

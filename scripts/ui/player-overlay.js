@@ -38,30 +38,9 @@ window.TableFlowScenePrep.PlayerOverlay = class {
         overlay.innerHTML = this._generateOverlayHTML(displayMessage, currentPlayer, otherWaitingPlayers, playerInfo.onlineCount, journalContent, tips);
         
         document.body.appendChild(overlay);
-        this._applySidebarInset();
-        window.addEventListener('resize', this._boundInset ??= () => this._applySidebarInset());
         this._startTipRotation(tips);
         // Presence can still be settling when a client first loads
         setTimeout(() => this.refreshPlayers(), 1500);
-
-        
-        // Only enable dragging for GMs
-        if (game.user.isGM) {
-            this._initializeDragging();
-        }
-        
-    }
-    
-    /**
-     * GMs can see the overlay too; it must never cover Foundry's right sidebar
-     * @private
-     */
-    static _applySidebarInset() {
-        const overlay = document.getElementById(this.OVERLAY_ID);
-        if (!overlay || !game.user.isGM) return;
-        const inset = window.TableFlowScenePrep.DOMHelpers.getRightSidebarInset();
-        overlay.style.width = inset > 0 ? 'auto' : '';
-        overlay.style.right = inset > 0 ? `${inset}px` : '';
     }
     
     /**
@@ -229,7 +208,7 @@ window.TableFlowScenePrep.PlayerOverlay = class {
         return `
             <div class="tfsp-overlay-journal">
                 <div class="tfsp-overlay-journal-title">${window.TableFlowScenePrep.DOMHelpers.escapeHTML(content.title)}</div>
-                <div class="tfsp-overlay-journal-body">${content.html}</div>
+                <div class="tfsp-overlay-journal-body">${window.TableFlowScenePrep.DOMHelpers.sanitizeHTML(content.html)}</div>
             </div>
         `;
     }
@@ -246,15 +225,6 @@ window.TableFlowScenePrep.PlayerOverlay = class {
         return `
             <!-- Main content card -->
             <div class="tfsp-overlay-card">
-                ${game.user.isGM ? `
-                <!-- Drag handle (GM only) -->
-                <div class="tfsp-drag-handle" title="Drag to move vertically">
-                    <div class="tfsp-drag-indicator"></div>
-                    <div class="tfsp-drag-indicator"></div>
-                    <div class="tfsp-drag-indicator"></div>
-                </div>
-                ` : ''}
-                
                 <!-- Content layer -->
                 <div class="tfsp-overlay-content">
                     <!-- Bordered intro card: icon, title, description -->
@@ -280,7 +250,7 @@ window.TableFlowScenePrep.PlayerOverlay = class {
                                 <div class="tfsp-status-dot tfsp-status-online"></div>
                                 <span>You're Connected</span>
                             </div>
-                            <div class="tfsp-player-name">${currentPlayer.name}</div>
+                            <div class="tfsp-player-name">${window.TableFlowScenePrep.DOMHelpers.escapeHTML(currentPlayer.name)}</div>
                         </div>
                         
                         <div class="tfsp-player-card tfsp-player-count">
@@ -301,85 +271,10 @@ window.TableFlowScenePrep.PlayerOverlay = class {
                         <a class="tfsp-overlay-footer-link" href="https://tableflowapps.com" target="_blank" rel="noopener noreferrer" title="tableflowapps.com">
                             <img class="tfsp-overlay-footer-logo" src="modules/table-flow-scene-prep/TABLEFLOW_LOGO.svg" alt="Table Flow">
                         </a>
-                        <span class="tfsp-overlay-footer-text">This screen does not interfere with foundry loading</span>
+                        <span class="tfsp-overlay-footer-text">This screen does not interfere with Foundry loading</span>
                     </div>
                 </div>
             </div>
         `;
-    }
-    
-    /**
-     * Initialize dragging functionality for the overlay card
-     * @private
-     */
-    static _initializeDragging() {
-        const card = document.querySelector('.tfsp-overlay-card');
-        const dragHandle = document.querySelector('.tfsp-drag-handle');
-        
-        if (!card || !dragHandle) return;
-        
-        let isDragging = false;
-        let startY = 0;
-        let startTop = 0;
-        
-        // Get the vertical center position
-        const getCenterY = () => {
-            const viewportHeight = window.innerHeight;
-            const cardHeight = card.offsetHeight;
-            return (viewportHeight - cardHeight) / 2;
-        };
-        
-        // Initialize position to center
-        card.style.position = 'relative';
-        card.style.top = '0px';
-        
-        const handleDragStart = (e) => {
-            isDragging = true;
-            startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-            
-            const currentTop = parseInt(card.style.top) || 0;
-            startTop = currentTop;
-            
-            card.style.transition = 'none';
-            dragHandle.style.cursor = 'grabbing';
-            
-            e.preventDefault();
-        };
-        
-        const handleDragMove = (e) => {
-            if (!isDragging) return;
-            
-            const currentY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-            const deltaY = currentY - startY;
-            const newTop = startTop + deltaY;
-            
-            // Calculate boundaries
-            const viewportHeight = window.innerHeight;
-            const cardHeight = card.offsetHeight;
-            const maxTop = viewportHeight - cardHeight - 20; // 20px margin from bottom
-            const minTop = -getCenterY() + 20; // 20px margin from top
-            
-            // Constrain to viewport
-            const constrainedTop = Math.max(minTop, Math.min(maxTop, newTop));
-            card.style.top = `${constrainedTop}px`;
-        };
-        
-        const handleDragEnd = () => {
-            if (!isDragging) return;
-            
-            isDragging = false;
-            card.style.transition = '';
-            dragHandle.style.cursor = 'grab';
-        };
-        
-        // Mouse events
-        dragHandle.addEventListener('mousedown', handleDragStart);
-        document.addEventListener('mousemove', handleDragMove);
-        document.addEventListener('mouseup', handleDragEnd);
-        
-        // Touch events
-        dragHandle.addEventListener('touchstart', handleDragStart, { passive: false });
-        document.addEventListener('touchmove', handleDragMove, { passive: false });
-        document.addEventListener('touchend', handleDragEnd);
     }
 };
