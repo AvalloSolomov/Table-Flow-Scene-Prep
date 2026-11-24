@@ -134,6 +134,10 @@ For bug reports or feature requests, open an issue at https://github.com/AvalloS
 
 ## Changelog
 
+### Version 2.1.2
+
+- Fixed the release package missing the `icons` folder, which left the interface icons blank
+
 ### Version 2.1.1
 
 - Initial public release

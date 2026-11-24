@@ -12,7 +12,7 @@ Record: Foundry version ____ · game system ____ · module version ____ · date 
 - [ ] Enable the module in a world. No errors in the console (F12) for any user.
 - [ ] Every icon renders (floating button, panel, settings tabs, header buttons, lock screen). None are blank squares.
 - [ ] The Table Flow logo shows in the panel header and the lock screen footer.
-- [ ] Update an older install to 2.1.1. The module loads and existing settings are kept.
+- [ ] Update an older install to 2.1.2. The module loads and existing settings are kept.
 
 ## 2. GM controls
 
@@ -99,6 +99,6 @@ Repeat sections 1 to 6 on each version you claim. Only list a version in `module
 ## 9. Release
 
 - [ ] The GitHub release assets contain `module.json` and `module.zip`.
-- [ ] `module.json` in the release has version 2.1.1 and the correct `manifest` and `download` URLs.
+- [ ] `module.json` in the release has version 2.1.2 and the correct `manifest` and `download` URLs.
 - [ ] `module.zip` contains `icons/` (including `icons/LICENSE`), `scripts/`, `styles/`, the logo, `README.md` and `LICENSE`. It does not contain `tests/` or `node_modules/`.
 - [ ] Installing from `https://github.com/AvalloSolomov/Table-Flow-Scene-Prep/releases/latest/download/module.json` works on a clean Foundry install.
