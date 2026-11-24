@@ -23,6 +23,14 @@ jobs:
           jq -r '(.scripts + .styles)[]' module.json | while read -r f; do
             test -f "$f" || { echo "Missing file listed in module.json: $f"; exit 1; }
           done
+          grep -ho "icons/[a-z-]*\.svg" styles/*.css | sort -u | while read -r f; do
+            test -f "$f" || { echo "Missing icon referenced in CSS: $f"; exit 1; }
+          done
+
+      - name: Check the tag matches the manifest version
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          test "$(jq -r .version module.json)" = "$VERSION" || { echo "Tag $GITHUB_REF_NAME does not match module.json version $(jq -r .version module.json)"; exit 1; }
 
       - name: Set manifest URLs and version from the release tag
         run: |
@@ -36,7 +44,7 @@ jobs:
              module.json > module.tmp && mv module.tmp module.json
 
       - name: Package module
-        run: zip -r module.zip module.json README.md LICENSE TABLEFLOW_LOGO.svg scripts styles -x '*.backup' -x '*.log'
+        run: zip -r module.zip module.json README.md LICENSE TABLEFLOW_LOGO.svg scripts styles icons -x '*.backup' -x '*.log'
 
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
