@@ -30,44 +30,44 @@ window.TableFlowScenePrep.SocketHandler = class {
     }
     
     /**
-     * Handle incoming socket messages
+     * Handle incoming socket messages.
+     * Sockets are not authenticated, so players never trust the payload: the world setting
+     * (writable only by a GM) is the source of truth and the message is just a nudge to re-check it.
      * @private
      */
     static _handleSocketMessage(data) {
+        if (!data?.action) {
+            return;
+        }
+
         // Ignore targeted events not intended for this client.
-        if (data?.targetUserId && data.targetUserId !== game.user.id) {
+        if (data.targetUserId && data.targetUserId !== game.user.id) {
             return;
         }
         
         // Handle GM banner updates
         if (game.user.isGM) {
-            switch (data.action) {
-                case 'lock':
-                    if (window.TableFlowScenePrep.GMBanner) {
-                        window.TableFlowScenePrep.GMBanner.show();
-                    }
-                    break;
-                case 'unlock':
-                    if (window.TableFlowScenePrep.GMBanner) {
-                        window.TableFlowScenePrep.GMBanner.hide();
-                    }
-                    break;
+            const locked = window.TableFlowScenePrep.Settings.isLocked();
+            if (data.action === 'lock' && locked) {
+                window.TableFlowScenePrep.GMBanner?.show();
+            } else if (data.action === 'unlock' && !locked) {
+                window.TableFlowScenePrep.GMBanner?.hide();
             }
             return; // GMs don't need player overlay processing
         }
         
         switch (data.action) {
             case 'lock':
-                this._onLock(data);
+                this._onLock();
                 break;
             case 'unlock':
-                this._onUnlock(data);
+                this._onUnlock();
                 break;
             case 'messageUpdate':
-                this._onMessageUpdate(data);
+                this._onMessageUpdate();
                 break;
             case 'journalUpdate':
-                this._onJournalUpdate(data);
+                this._onJournalUpdate();
                 break;
             default:
                 console.warn('Table Flow - Scene Prep | Unknown socket action:', data.action);
@@ -75,42 +75,41 @@ window.TableFlowScenePrep.SocketHandler = class {
     }
     
     /**
-     * Handle lock event
      * @private
      */
-    static _onLock(data) {
-        if (window.TableFlowScenePrep.PlayerOverlay) {
-            window.TableFlowScenePrep.PlayerOverlay.show(data.message);
+    static _onLock() {
+        const settings = window.TableFlowScenePrep.Settings;
+        if (settings.isLocked()) {
+            window.TableFlowScenePrep.PlayerOverlay?.show(settings.getLockoutMessage());
         }
     }
     
     /**
-     * Handle unlock event
      * @private
      */
-    static _onUnlock(data) {
-        if (window.TableFlowScenePrep.PlayerOverlay) {
-            window.TableFlowScenePrep.PlayerOverlay.hide();
+    static _onUnlock() {
+        if (!window.TableFlowScenePrep.Settings.isLocked()) {
+            window.TableFlowScenePrep.PlayerOverlay?.hide();
         }
     }
     
     /**
-     * Handle message update event
      * @private
      */
-    static _onMessageUpdate(data) {
-        if (window.TableFlowScenePrep.PlayerOverlay) {
-            window.TableFlowScenePrep.PlayerOverlay.updateMessage(data.message);
+    static _onMessageUpdate() {
+        const settings = window.TableFlowScenePrep.Settings;
+        if (settings.isLocked()) {
+            window.TableFlowScenePrep.PlayerOverlay?.updateMessage(settings.getLockoutMessage());
         }
     }
     
     /**
-     * Handle linked journal update event
      * @private
      */
-    static _onJournalUpdate(data) {
-        if (window.TableFlowScenePrep.PlayerOverlay) {
-            window.TableFlowScenePrep.PlayerOverlay.updateJournal(window.TableFlowScenePrep.Settings.getLockScreenJournalContent());
+    static _onJournalUpdate() {
+        const settings = window.TableFlowScenePrep.Settings;
+        if (settings.isLocked()) {
+            window.TableFlowScenePrep.PlayerOverlay?.updateJournal(settings.getLockScreenJournalContent());
         }
     }
     
