@@ -3,7 +3,10 @@
  * Main initialization and hook management
  */
 
-// Initialize when ready
+Hooks.once('init', () => {
+    window.TableFlowScenePrep.Settings.register();
+});
+
 Hooks.once('ready', () => {
     setTimeout(() => {
         initializeModule().catch((error) => {
@@ -13,9 +16,6 @@ Hooks.once('ready', () => {
 });
 
 async function initializeModule() {
-    // Register settings
-    window.TableFlowScenePrep.Settings.register();
-    
     // Setup socket handler
     window.TableFlowScenePrep.SocketHandler.initialize();
     
@@ -73,52 +73,28 @@ Hooks.on('canvasReady', () => {
     }
 });
 
-// Monitor user connections for player count updates
-Hooks.on('userConnected', () => {
-    if (game.user.isGM && window.TableFlowScenePrep?.FloatingButton?.button) {
-        window.TableFlowScenePrep.FloatingButton.updateState();
-    }
-    if (game.user.isGM && document.getElementById(window.TableFlowScenePrep?.GMBanner?.BANNER_ID)) {
-        window.TableFlowScenePrep.GMBanner.updateCount();
-    }
-});
+// Fires when a user connects or disconnects (Foundry has no separate disconnect hook)
+Hooks.on('userConnected', (user, connected) => {
+    const tfsp = window.TableFlowScenePrep;
+    if (!tfsp) return;
 
-Hooks.on('userConnected', (user) => {
-    if (!game.user.isGM) {
-        return;
-    }
+    // Keep the lock screen's player list live for everyone waiting
+    setTimeout(() => tfsp.PlayerOverlay?.refreshPlayers(), 500);
 
-    if (!window.TableFlowScenePrep?.Settings?.isLocked()) {
-        return;
+    if (!game.user.isGM) return;
+
+    if (tfsp.FloatingButton?.button) {
+        tfsp.FloatingButton.updateState();
+    }
+    if (document.getElementById(tfsp.GMBanner?.BANNER_ID)) {
+        tfsp.GMBanner.updateCount();
     }
 
     // Re-send lock state to newly connected users to prevent missed lock overlays.
-    setTimeout(() => {
-        if (!window.TableFlowScenePrep?.SocketHandler) {
-            return;
-        }
-
-        window.TableFlowScenePrep.SocketHandler.emitLock(
-            window.TableFlowScenePrep.Settings.getLockoutMessage(),
-            user?.id ?? null
-        );
-    }, 800);
-});
-
-// Keep the lock screen's player list live for everyone waiting
-Hooks.on('userConnected', () => {
-    setTimeout(() => window.TableFlowScenePrep?.PlayerOverlay?.refreshPlayers(), 500);
-});
-Hooks.on('userDisconnected', () => {
-    setTimeout(() => window.TableFlowScenePrep?.PlayerOverlay?.refreshPlayers(), 500);
-});
-
-Hooks.on('userDisconnected', () => {
-    if (game.user.isGM && window.TableFlowScenePrep?.FloatingButton?.button) {
-        window.TableFlowScenePrep.FloatingButton.updateState();
-    }
-    if (game.user.isGM && document.getElementById(window.TableFlowScenePrep?.GMBanner?.BANNER_ID)) {
-        window.TableFlowScenePrep.GMBanner.updateCount();
+    if (connected && tfsp.Settings?.isLocked()) {
+        setTimeout(() => {
+            tfsp.SocketHandler?.emitLock(tfsp.Settings.getLockoutMessage(), user?.id ?? null);
+        }, 800);
     }
 });
 
