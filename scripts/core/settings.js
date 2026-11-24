@@ -16,7 +16,7 @@ window.TableFlowScenePrep.Settings = class {
         try {
             game.settings.register(this.MODULE_ID, 'isLocked', {
                 name: 'Game Locked',
-                hint: 'Whether the game is currently locked to prevent player connections',
+                hint: 'Whether the session is currently locked',
                 scope: 'world',
                 config: false,
                 type: Boolean,
@@ -26,7 +26,7 @@ window.TableFlowScenePrep.Settings = class {
             
             game.settings.register(this.MODULE_ID, 'lockoutMessage', {
                 name: 'Lockout Message',
-                hint: 'Message displayed to players when they try to join during lockout',
+                hint: 'Message shown to players on the lock screen',
                 scope: 'world',
                 config: false,
                 type: String,
@@ -36,7 +36,7 @@ window.TableFlowScenePrep.Settings = class {
             
             game.settings.register(this.MODULE_ID, 'autoLock', {
                 name: 'Auto-Lock on Startup',
-                hint: 'Automatically lock the game when the world starts',
+                hint: 'Automatically lock the session when the world starts',
                 scope: 'world',
                 config: false,
                 type: Boolean,
@@ -45,7 +45,7 @@ window.TableFlowScenePrep.Settings = class {
             
             game.settings.register(this.MODULE_ID, 'showBanner', {
                 name: 'Show Lock Banner',
-                hint: 'Display the banner at the top when session is locked',
+                hint: 'Display the lock indicator when the session is locked',
                 scope: 'world',
                 config: false,
                 type: Boolean,
@@ -102,14 +102,12 @@ window.TableFlowScenePrep.Settings = class {
                 config: false,
                 type: String,
                 default: [
-                    'A familiar can deliver your touch spells for you, even Inflict Wounds, so your owl can do the stabbing.',
-                    'Taking damage while concentrating forces a Constitution save: DC 10, or half the damage if that is higher.',
-                    'Opportunity attacks only trigger when you leave reach by your own movement. Being shoved or teleported is free.',
-                    'Stabilising a dying friend is a DC 10 Medicine check. No healing magic required.',
-                    'Dropping prone is free, but standing back up costs half your movement. Plan your dramatic collapses.',
-                    'Falling damage stops at 20d6, so the floor has a speed limit on how dead it can make you.',
-                    'A Portable Hole inside a Bag of Holding tears a rift to the Astral Plane. Please do not test it.',
-                    'A 10-foot pole costs 5 copper and has saved more adventurers than any spell.'
+                    'Check your character sheet before the session starts so your first turn goes quickly.',
+                    'Say what you want to do before asking for a roll.',
+                    'Keep your phone on silent so everyone stays in the scene.',
+                    'Think about what your character wants this session. It makes decisions easier.',
+                    'A short recap of last session helps everyone get back into the story.',
+                    'If a rule is unclear, make a quick ruling and look it up after the session.'
                 ].join('\n'),
                 onChange: () => this._syncLockScreenTips()
             });
