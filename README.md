@@ -16,8 +16,8 @@ A Foundry VTT module that locks the session behind a waiting screen while you wo
 
 - **Floating button.** Red when locked, green when open. Drag it where you want it, or pin it to a corner. It sits below the Intermission and Patch Notes buttons when those are there.
 - **Control panel.** Shows the lock status, who's connected, and the lock and unlock buttons.
-- **Red banner.** A red bar at the top while the session is locked. Click it to unlock. You can move it up or down. The browser tab shows a lock too.
-- **Settings.** Open them from the gear in the panel. The Lock Screen tab is for the message, journal, and tips. The General tab is for the banner and session settings.
+- **Lock indicator.** A red bar at the top while the session is locked, with a "N waiting" count. Click it to unlock. You can move it up or down. It can also be shown as a compact pill or a screen frame (see Indicator Style under Settings). The browser tab shows a lock too.
+- **Settings.** Open them from the gear in the panel. The Lock Screen tab is for the message, journal, and tips. The General tab is for the lock indicator and session settings.
 
 ### The waiting screen
 
@@ -31,14 +31,16 @@ A Foundry VTT module that locks the session behind a waiting screen while you wo
 
 - Pick a world journal page by searching for it or dragging it in. It shows up right away.
 - What players see is a copy with the secrets taken out, so they can read it without journal permission.
-- The copy updates when you edit the journal, pick a different page, or get ready to unlock.
+- The copy updates when you edit the journal, pick a different page, or when the GM loads the world.
+- Only text pages are shown. Other page types show a short notice instead.
 - Compendium journals don't work here. It has to be a world journal.
 
 ### Tips & Trivia
 
-- One tip per line, edited in GM Settings.
+- One tip per line, edited in Settings under Lock Screen Tips. Press Enter for the next tip.
 - Paste in a list and it splits into separate tips on its own.
-- You can rename the box. It starts as "Tips & Trivia".
+- You can rename the box (up to 40 characters). It starts as "Tips & Trivia".
+- Clear the list to hide the box.
 - Players see them shuffled, one at a time, every 10 seconds.
 
 ## Installation
@@ -59,15 +61,15 @@ A Foundry VTT module that locks the session behind a waiting screen while you wo
 1. Open the floating button.
 2. Open **Settings** (the gear) and set your lockout message on the **Lock Screen** tab.
 3. Click **Lock Session**.
-4. Check the player count in the panel or the banner.
+4. Check the player count in the panel or the lock indicator.
 5. If a player says they don't see the lock screen, click **Resync Lock Screens**.
 6. Click **Unlock Session** when you're ready.
 
 ### For GMs
 
 - **Floating button.** Green means the session is open. Red means it's locked. Drag it or pin it to a corner.
-- **Control panel.** Lock, unlock, re-send lock screens, and see who's connected. The gear opens Settings. Use **Back to Scene Prep** to get back.
-- **While it's locked.** The red banner shows at the top, the browser tab shows a lock, and notifications say how many players were affected.
+- **Control panel.** Lock, unlock, re-send lock screens, and see who's connected. The gear opens Settings in its own window.
+- **While it's locked.** The lock indicator shows, the browser tab shows a lock, and notifications say how many players were affected.
 - **If something goes wrong.** Use **Resync Lock Screens** if a player reconnects and misses the lock screen. The lock state is saved in the world, so it survives a reload.
 
 ### For players
@@ -80,20 +82,23 @@ When the game is locked:
 
 ## Settings
 
-Everything is in the Settings view. Open it from the gear in the GM panel.
+Everything is in the Settings window. Open it from the gear in the GM panel.
 
 ### Lock Screen tab
 
-- **Lockout Message.** What players see while they're waiting.
-- **Journal.** Search for a world journal page, or drag one in.
-- **Tips.** One tip per line, plus the box title.
+- **Lockout Message.** What players see while they're waiting. Use **Save Message** to apply it.
+- **Lock Screen Journal.** Search for a world journal page, or drag one in. It applies immediately.
+- **Lock Screen Tips.** One tip per line, plus the **Box Title**.
 
 ### General tab
 
-- **Show Lock Banner.** Turn the red banner on or off.
-- **Banner Top Position.** How far down the banner sits, 0–300px.
+- **Show Lock Indicator.** Turn the lock indicator on or off.
+- **Indicator Style.** Bar (click to unlock), Compact pill, Screen frame, or Bar and frame. This is stored per browser, and players always get the full-screen lock screen.
+- **Bar Top Position (px).** How far down the bar sits, 0–300.
 - **Auto-Lock on Startup.** Lock the session when the world loads.
-- **Button Anchor Position.** Free (drag it anywhere), or pinned to Top Left, Top Right, Bottom Left, or Bottom Right.
+- **Button Anchor Position.** Free (Draggable), Top Right, Top Left, Bottom Right, or Bottom Left.
+
+**Save Settings** saves the General tab and the tips.
 
 ## Technical details
 
@@ -107,7 +112,7 @@ Everything is in the Settings view. Open it from the gear in the GM panel.
 
 - **A player doesn't see the lock screen.** Make sure the session is locked, then click **Resync Lock Screens** and ask them to refresh once. Check they're in the connected players list. If that doesn't do it, unlock and lock again.
 - **The lock screen shows no journal.** Pick a world journal page in **Settings → Lock Screen**. Compendium journals don't work. The GM has to be online, since the GM's client is what publishes the journal players read.
-- **The button is missing or in the wrong place.** Reload Foundry, check the module is enabled, and set **Button Anchor** to a corner in **Settings → General**. Another module might be covering it.
+- **The button is missing or in the wrong place.** Reload Foundry, check the module is enabled, and set **Button Anchor Position** to a corner in **Settings → General**. Another module might be covering it.
 - **Lock and unlock feel inconsistent.** Have only one GM run the lock. Click **Resync Lock Screens** while locked. Hard refresh (Ctrl+F5) so every client is on the same version.
 - **Styling looks wrong.** Hard refresh (Ctrl+F5).
 
@@ -124,6 +129,8 @@ If that doesn't fix it, open the browser console (F12), look for errors mentioni
 Copyright (c) 2026 Tableflow. All rights reserved.
 
 You may install and use this module unmodified, including in commercial games. Modification and redistribution are not permitted without written permission. See [LICENSE](LICENSE) for the full terms.
+
+Interface icons are from [Lucide](https://lucide.dev) and are used under the ISC license. The license text is in [icons/LICENSE](icons/LICENSE).
 
 ## Support
 
