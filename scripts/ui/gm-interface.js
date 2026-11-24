@@ -327,7 +327,7 @@ window.TableFlowScenePrep.GMInterface = class {
                         
                         <div class="tfsp-setting-item tfsp-tips-item">
                             <div class="tfsp-setting-hint">One tip per bullet (press Enter for the next). Pasted lists split automatically. Keep each under about 170 characters. Leave empty to hide the section.</div>
-                            <textarea id="setting-lock-tips" class="tfsp-message-input" rows="6" placeholder="• Check your character sheet before the session starts.">${window.TableFlowScenePrep.DOMHelpers.escapeHTML(this._bulletTips(window.TableFlowScenePrep.Settings.getLockScreenTips()))}</textarea>
+                            <textarea id="setting-lock-tips" class="tfsp-message-input" rows="6">${window.TableFlowScenePrep.DOMHelpers.escapeHTML(this._bulletTips(window.TableFlowScenePrep.Settings.getLockScreenTips()))}</textarea>
                         </div>
                     </div>
                     

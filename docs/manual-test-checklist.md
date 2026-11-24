@@ -61,7 +61,7 @@ Record: Foundry version ____ · game system ____ · module version ____ · date 
 - [ ] The button docks below the Table Flow Intermission and Patch Notes buttons when those modules are active, and goes back to its own position when they are disabled.
 - [ ] **Save Settings** shows "Settings saved". Reload and confirm every value persisted.
 - [ ] Tips: type, press Enter for a new bullet, paste a list with numbers and dashes. Tips split into one per line. An empty list hides the box. The box title saves (40 characters max).
-- [ ] The default tips contain no game-system rules.
+- [ ] No default tips ship. The tips box is hidden until the GM adds tips, and it shows them after saving.
 - [ ] Message and tips changes made by the GM appear on a player's live lock screen without a refresh.
 
 ## 6. Lock-screen journal

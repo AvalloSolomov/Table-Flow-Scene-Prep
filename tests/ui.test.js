@@ -44,7 +44,7 @@ test('overlay: show() twice leaves a single overlay', () => {
 });
 
 test('overlay: hide() removes it and stops the tip timers', () => {
-    const env = setup();
+    const env = setup({ settings: { lockScreenTips: 'One\nTwo' } });
     env.tfsp.PlayerOverlay.show('a');
     assert.ok(env.tfsp.PlayerOverlay.tipInterval, 'tips rotate with more than one tip');
     env.tfsp.PlayerOverlay.hide();

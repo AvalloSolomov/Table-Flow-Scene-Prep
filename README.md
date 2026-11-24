@@ -16,7 +16,7 @@ A Foundry VTT module that locks the session behind a waiting screen while you wo
 
 - **Floating button.** Red when locked, green when open. Drag it where you want it, or pin it to a corner. It sits below the Intermission and Patch Notes buttons when those are there.
 - **Control panel.** Shows the lock status, who's connected, and the lock and unlock buttons.
-- **Lock indicator.** A red bar at the top while the session is locked, with a "N waiting" count. Click it to unlock. You can move it up or down. It can also be shown as a compact pill or a screen frame (see Indicator Style under Settings). The browser tab shows a lock too.
+- **Lock indicator.** A red bar at the top while the session is locked. Click it to unlock. You can move it up or down. The browser tab shows a lock too.
 - **Settings.** Open them from the gear in the panel. The Lock Screen tab is for the message, journal, and tips. The General tab is for the lock indicator and session settings.
 
 ### The waiting screen
@@ -32,15 +32,13 @@ A Foundry VTT module that locks the session behind a waiting screen while you wo
 - Pick a world journal page by searching for it or dragging it in. It shows up right away.
 - What players see is a copy with the secrets taken out, so they can read it without journal permission.
 - The copy updates when you edit the journal, pick a different page, or when the GM loads the world.
-- Only text pages are shown. Other page types show a short notice instead.
 - Compendium journals don't work here. It has to be a world journal.
 
 ### Tips & Trivia
 
-- One tip per line, edited in Settings under Lock Screen Tips. Press Enter for the next tip.
+- One tip per line, edited in GM Settings.
 - Paste in a list and it splits into separate tips on its own.
-- You can rename the box (up to 40 characters). It starts as "Tips & Trivia".
-- Clear the list to hide the box.
+- You can rename the box. It starts as "Tips & Trivia".
 - Players see them shuffled, one at a time, every 10 seconds.
 
 ## Installation
@@ -86,19 +84,17 @@ Everything is in the Settings window. Open it from the gear in the GM panel.
 
 ### Lock Screen tab
 
-- **Lockout Message.** What players see while they're waiting. Use **Save Message** to apply it.
-- **Lock Screen Journal.** Search for a world journal page, or drag one in. It applies immediately.
-- **Lock Screen Tips.** One tip per line, plus the **Box Title**.
+- **Lockout Message.** What players see while they're waiting.
+- **Lock Screen Journal.** Search for a world journal page, or drag one in.
+- **Lock Screen Tips.** One tip per line, plus the box title.
 
 ### General tab
 
 - **Show Lock Indicator.** Turn the lock indicator on or off.
-- **Indicator Style.** Bar (click to unlock), Compact pill, Screen frame, or Bar and frame. This is stored per browser, and players always get the full-screen lock screen.
+- **Indicator Style.** Bar (click to unlock), Compact pill, Screen frame, or Bar and frame.
 - **Bar Top Position (px).** How far down the bar sits, 0–300.
 - **Auto-Lock on Startup.** Lock the session when the world loads.
 - **Button Anchor Position.** Free (Draggable), Top Right, Top Left, Bottom Right, or Bottom Left.
-
-**Save Settings** saves the General tab and the tips.
 
 ## Technical details
 

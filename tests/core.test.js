@@ -37,7 +37,7 @@ test('Settings: defaults, tip parsing, and indicator fallback', async () => {
     assert.equal(Settings.isLocked(), false);
     assert.equal(Settings.getButtonAnchor(), 'free');
     assert.equal(Settings.getBannerTopPosition(), 100);
-    assert.ok(Settings.getLockScreenTips().length > 0);
+    assert.deepEqual([...Settings.getLockScreenTips()], [], 'no default tips ship with the module');
 
     await Settings.setLockScreenTips('• one\n\n  • two  \n');
     assert.deepEqual([...Settings.getLockScreenTips()], ['one', 'two']);

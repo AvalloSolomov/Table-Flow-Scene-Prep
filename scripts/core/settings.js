@@ -16,7 +16,7 @@ window.TableFlowScenePrep.Settings = class {
         try {
             game.settings.register(this.MODULE_ID, 'isLocked', {
                 name: 'Game Locked',
-                hint: 'Whether the session is currently locked',
+                hint: 'Whether the game is currently locked to prevent player connections',
                 scope: 'world',
                 config: false,
                 type: Boolean,
@@ -26,7 +26,7 @@ window.TableFlowScenePrep.Settings = class {
             
             game.settings.register(this.MODULE_ID, 'lockoutMessage', {
                 name: 'Lockout Message',
-                hint: 'Message shown to players on the lock screen',
+                hint: 'Message displayed to players when they try to join during lockout',
                 scope: 'world',
                 config: false,
                 type: String,
@@ -36,7 +36,7 @@ window.TableFlowScenePrep.Settings = class {
             
             game.settings.register(this.MODULE_ID, 'autoLock', {
                 name: 'Auto-Lock on Startup',
-                hint: 'Automatically lock the session when the world starts',
+                hint: 'Automatically lock the game when the world starts',
                 scope: 'world',
                 config: false,
                 type: Boolean,
@@ -45,7 +45,7 @@ window.TableFlowScenePrep.Settings = class {
             
             game.settings.register(this.MODULE_ID, 'showBanner', {
                 name: 'Show Lock Banner',
-                hint: 'Display the lock indicator when the session is locked',
+                hint: 'Display the banner at the top when session is locked',
                 scope: 'world',
                 config: false,
                 type: Boolean,
@@ -101,14 +101,7 @@ window.TableFlowScenePrep.Settings = class {
                 scope: 'world',
                 config: false,
                 type: String,
-                default: [
-                    'Check your character sheet before the session starts so your first turn goes quickly.',
-                    'Say what you want to do before asking for a roll.',
-                    'Keep your phone on silent so everyone stays in the scene.',
-                    'Think about what your character wants this session. It makes decisions easier.',
-                    'A short recap of last session helps everyone get back into the story.',
-                    'If a rule is unclear, make a quick ruling and look it up after the session.'
-                ].join('\n'),
+                default: '',
                 onChange: () => this._syncLockScreenTips()
             });
             
