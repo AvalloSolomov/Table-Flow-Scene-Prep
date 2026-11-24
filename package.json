@@ -1,0 +1,11 @@
+{
+  "name": "table-flow-scene-prep",
+  "private": true,
+  "description": "Development tooling for Table Flow - Scene Prep. Not shipped in the module package.",
+  "scripts": {
+    "test": "node --test --test-force-exit \"tests/*.test.js\""
+  },
+  "devDependencies": {
+    "jsdom": "^26.0.0"
+  }
+}

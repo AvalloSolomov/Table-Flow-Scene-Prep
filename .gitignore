@@ -3,3 +3,4 @@
 *.log
 .env*
 module.zip
+node_modules/
