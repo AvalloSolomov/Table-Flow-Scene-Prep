@@ -26,6 +26,7 @@ jobs:
           grep -ho "icons/[a-z-]*\.svg" styles/*.css | sort -u | while read -r f; do
             test -f "$f" || { echo "Missing icon referenced in CSS: $f"; exit 1; }
           done
+          test -f backgrounds/dice.jpg || { echo "Missing built-in lock screen background"; exit 1; }
 
       - name: Check the tag matches the manifest version
         run: |
@@ -44,7 +45,7 @@ jobs:
              module.json > module.tmp && mv module.tmp module.json
 
       - name: Package module
-        run: zip -r module.zip module.json README.md LICENSE TABLEFLOW_LOGO.svg scripts styles icons -x '*.backup' -x '*.log'
+        run: zip -r module.zip module.json README.md LICENSE TABLEFLOW_LOGO.svg scripts styles icons backgrounds -x '*.backup' -x '*.log'
 
       - name: Upload release assets
         uses: softprops/action-gh-release@v2

@@ -32,7 +32,7 @@ test('overlay: renders message, escapes names, and shows other online players', 
     assert.ok(overlay.textContent.includes('<b>Me</b>'));
     assert.ok(!overlay.textContent.includes('Offline Olga'));
     assert.ok(!overlay.textContent.includes('The GM'));
-    assert.match(overlay.querySelector('.tfsp-connected-players-pill').textContent, /^2 Connected$/);
+    assert.match(overlay.querySelector('.tfsp-connected-players-pill').textContent, /^2$/);
 });
 
 test('overlay: show() twice leaves a single overlay', () => {
@@ -41,6 +41,44 @@ test('overlay: show() twice leaves a single overlay', () => {
     env.tfsp.PlayerOverlay.show('b');
     assert.equal(env.document.querySelectorAll(`#${env.tfsp.PlayerOverlay.OVERLAY_ID}`).length, 1);
     assert.equal(env.document.querySelector('.tfsp-overlay-message').textContent, 'b');
+});
+
+test('overlay: built-in background updates in place and is restored for late joiners', async () => {
+    const env = setup({ settings: { isLocked: true } });
+    env.tfsp.PlayerOverlay.show('Preparing');
+    const overlay = env.document.getElementById(env.tfsp.PlayerOverlay.OVERLAY_ID);
+    assert.equal(overlay.classList.contains('tfsp-builtin-dice-background'), false);
+    await env.game.settings.set(MODULE, 'lockScreenBackground', 'dice');
+    assert.equal(overlay.classList.contains('tfsp-builtin-dice-background'), true);
+    assert.equal(env.document.getElementById(overlay.id), overlay);
+    env.tfsp.PlayerOverlay.show('Preparing');
+    assert.ok(env.document.getElementById(overlay.id).classList.contains('tfsp-builtin-dice-background'));
+    await env.game.settings.set(MODULE, 'lockScreenBackground', 'dark');
+    assert.equal(env.document.getElementById(overlay.id).classList.contains('tfsp-builtin-dice-background'), false);
+    env.tfsp.PlayerOverlay.hide();
+});
+
+test('overlay: the only built-in image is bundled and retains full brightness and a 95% panel', () => {
+    const fs = require('node:fs');
+    const path = require('node:path');
+    const root = path.join(__dirname, '..');
+    const css = fs.readFileSync(path.join(root, 'styles', 'table-flow-scene-prep.css'), 'utf8');
+    assert.ok(fs.statSync(path.join(root, 'backgrounds', 'dice.jpg')).size > 0);
+    assert.match(css, /background-image:\s*url\(['"]\.\.\/backgrounds\/dice\.jpg['"]\)/);
+    assert.match(css, /tfsp-builtin-dice-background:not\(\.tfsp-premium-has-image\)[\s\S]*?fill-opacity='\.95'/);
+});
+
+test('overlay: footer logo remains an accessible link with a framed presentation', () => {
+    const env = setup();
+    env.tfsp.PlayerOverlay.show('a');
+    const link = env.document.querySelector('.tfsp-overlay-footer-link');
+    assert.equal(link.getAttribute('href'), 'https://tableflowapps.com');
+    assert.equal(link.querySelector('.tfsp-overlay-footer-logo').getAttribute('alt'), 'Table Flow');
+    const fs = require('node:fs');
+    const path = require('node:path');
+    const css = fs.readFileSync(path.join(__dirname, '..', 'styles', 'table-flow-scene-prep.css'), 'utf8');
+    assert.match(css, /#table-flow-scene-prep-overlay \.tfsp-overlay-footer-link\s*\{[^}]*border:\s*3px double var\(--tfsp-ov-brass\)/);
+    assert.match(css, /#table-flow-scene-prep-overlay \.tfsp-overlay-footer-link:focus-visible/);
 });
 
 test('overlay: hide() removes it and stops the tip timers', () => {
@@ -101,7 +139,7 @@ test('overlay: refreshPlayers updates the count and names in place and tolerates
     p1.active = false;
     env.tfsp.PlayerOverlay.refreshPlayers();
     assert.match(env.document.querySelector('.tfsp-player-count').textContent, /Just you/);
-    assert.equal(env.document.querySelector('.tfsp-connected-players-pill').textContent, '1 Connected');
+    assert.equal(env.document.querySelector('.tfsp-connected-players-pill').textContent, '1');
 });
 
 test('overlay: has no GM-only drag handle', () => {

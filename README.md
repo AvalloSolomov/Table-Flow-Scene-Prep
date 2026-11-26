@@ -22,6 +22,7 @@ A Foundry VTT module that locks the session behind a waiting screen while you wo
 ### The waiting screen
 
 - Your own lockout message, with a padlock icon.
+- A choice of solid dark or the included dice-and-map background.
 - Player cards showing who's connected and waiting.
 - A journal page, if you set one.
 - Tips and trivia that rotate every 10 seconds.
@@ -85,6 +86,9 @@ Everything is in the Settings window. Open it from the gear in the GM panel.
 ### Lock Screen tab
 
 - **Lockout Message.** What players see while they're waiting.
+- **Built-in Background.** Choose Solid Dark or Dice and Map, then save settings.
+  Custom images and videos require Scene Prep Premium; an active Premium
+  background overrides this choice until it is removed.
 - **Lock Screen Journal.** Search for a world journal page, or drag one in.
 - **Lock Screen Tips.** One tip per line, plus the box title.
 

@@ -29,7 +29,8 @@ function createEnvironment({ isGM = false, userId = 'u-self', users = [], settin
 
     window.Hooks = {
         on: (name, fn) => hooks.on.push({ name, fn }),
-        once: (name, fn) => hooks.once.push({ name, fn })
+        once: (name, fn) => hooks.once.push({ name, fn }),
+        callAll: () => {}
     };
     window.foundry = { utils: { debounce: (fn) => fn } };
     window.ui = {

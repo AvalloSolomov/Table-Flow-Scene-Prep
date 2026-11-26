@@ -58,6 +58,7 @@ window.TableFlowScenePrep.GMInterface = class {
         
         document.getElementById('gm-interface-settings')?.classList.add('tfsp-header-btn-active');
         this._attachSettingsListeners();
+        Hooks.callAll('tableFlowScenePrepRenderLockScreenSettings', popup);
     }
     
     /**
@@ -144,9 +145,12 @@ window.TableFlowScenePrep.GMInterface = class {
                     
                     <!-- Status Card -->
                     <div class="tfsp-status-card ${isLocked ? 'tfsp-status-locked' : 'tfsp-status-unlocked'}">
+                        <i class="tfsp-icon ${isLocked ? 'tfsp-icon-lock' : 'tfsp-icon-lock-open'} tfsp-status-icon" aria-hidden="true"></i>
                         <span class="tfsp-status-label">${isLocked ? 'Session Locked' : 'Session Unlocked'}</span>
                     </div>
                     
+                    <div class="tfsp-gm-divider" aria-hidden="true"><span></span></div>
+
                     <!-- Player Count -->
                     <div class="tfsp-player-stats">
                         <div class="tfsp-stat-card">
@@ -178,9 +182,10 @@ window.TableFlowScenePrep.GMInterface = class {
                     <!-- Player List -->
                     <div class="tfsp-player-list">
                         <div class="tfsp-player-list-header">
-                            <span><i class="tfsp-icon tfsp-icon-users" aria-hidden="true"></i> Connected Players</span>
-                            <span class="tfsp-player-count-pill">${playerInfo.onlineCount} ONLINE | ${playerInfo.onlineCount} READY</span>
+                            <span class="tfsp-player-list-title">Connected Players</span>
+                            <span class="tfsp-player-count-pill">${playerInfo.onlineCount} ONLINE | ${playerInfo.online.length} READY</span>
                         </div>
+                        <div class="tfsp-gm-divider" aria-hidden="true"><span></span></div>
                         <div class="tfsp-player-list-content">
                             ${this._generatePlayerList(playerInfo.all)}
                         </div>
@@ -222,6 +227,16 @@ window.TableFlowScenePrep.GMInterface = class {
                     
                     <div class="tfsp-subpanel tfsp-subpanel-active" data-subpanel="lockscreen">
                     
+                    <div class="tfsp-settings-section">
+                        <h3 class="tfsp-settings-header">Built-in Background</h3>
+                        <label class="tfsp-setting-label" for="setting-lock-background">Player Lock Screen Background</label>
+                        <select id="setting-lock-background" class="tfsp-setting-input">
+                            <option value="dark" ${window.TableFlowScenePrep.Settings.getLockScreenBackground() === 'dark' ? 'selected' : ''}>Solid Dark</option>
+                            <option value="dice" ${window.TableFlowScenePrep.Settings.getLockScreenBackground() === 'dice' ? 'selected' : ''}>Dice and Map</option>
+                        </select>
+                        <div class="tfsp-setting-hint">Custom images and videos are available in Premium. An active Premium background overrides this choice.</div>
+                    </div>
+
                     <div class="tfsp-settings-section">
                         <h3 class="tfsp-settings-header">Lockout Message</h3>
                         
@@ -737,6 +752,15 @@ window.TableFlowScenePrep.GMInterface = class {
         const buttonAnchor = document.getElementById('setting-button-anchor')?.value ?? 'free';
         const lockTips = this._parseTipLines(document.getElementById('setting-lock-tips')?.value ?? '').join('\n');
         const lockTipsTitle = document.getElementById('setting-lock-tips-title')?.value ?? '';
+        const lockBackground = document.getElementById('setting-lock-background')?.value;
+
+        try {
+            await window.TableFlowScenePrep.Settings.setLockScreenBackground(lockBackground);
+        } catch (error) {
+            console.error('Table Flow - Scene Prep | Failed to save lock screen background:', error);
+            ui.notifications.error(`Failed to save lock screen background: ${error.message}`);
+            return;
+        }
 
         if (bannerPositionInput) {
             bannerPositionInput.value = String(bannerPosition);

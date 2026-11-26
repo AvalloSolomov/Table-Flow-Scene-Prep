@@ -57,9 +57,23 @@ test('Settings: every setting the code reads is registered', () => {
     const { Settings } = env.tfsp;
     for (const getter of ['isLocked', 'getLockoutMessage', 'getAutoLock', 'getShowBanner', 'getBannerTopPosition',
         'getButtonAnchor', 'getLockScreenJournalId', 'getLockScreenJournalPageId', 'getLockScreenTips',
-        'getLockIndicator', 'getLockScreenTipsTitle', 'getLockScreenJournalContent']) {
+        'getLockIndicator', 'getLockScreenTipsTitle', 'getLockScreenJournalContent', 'getLockScreenBackground']) {
         assert.doesNotThrow(() => Settings[getter](), getter);
     }
+});
+
+test('Settings: background accepts only the two built-in choices', async () => {
+    const gm = createEnvironment({ isGM: true });
+    gm.registerSettings();
+    const settings = gm.tfsp.Settings;
+    assert.equal(settings.getLockScreenBackground(), 'dark');
+    await settings.setLockScreenBackground('dice');
+    assert.equal(settings.getLockScreenBackground(), 'dice');
+    await assert.rejects(settings.setLockScreenBackground('worlds/example/custom.png'), /built-in/);
+    assert.equal(settings.getLockScreenBackground(), 'dice');
+    const player = createEnvironment();
+    player.registerSettings();
+    await assert.rejects(player.tfsp.Settings.setLockScreenBackground('dice'), /Only a GM/);
 });
 
 test('Settings: a player client shows and hides the overlay when the lock setting changes', async () => {

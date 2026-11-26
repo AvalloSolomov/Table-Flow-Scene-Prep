@@ -33,6 +33,17 @@ window.TableFlowScenePrep.Settings = class {
                 default: 'The session is currently paused. Please wait for the Game Master to continue.',
                 onChange: (message) => this._syncLockMessage(message)
             });
+
+            game.settings.register(this.MODULE_ID, 'lockScreenBackground', {
+                name: 'Lock Screen Background',
+                hint: 'Built-in player lock screen background',
+                scope: 'world',
+                config: false,
+                type: String,
+                choices: { dark: 'Solid Dark', dice: 'Dice and Map' },
+                default: 'dark',
+                onChange: () => window.TableFlowScenePrep.PlayerOverlay?.refreshBackground()
+            });
             
             game.settings.register(this.MODULE_ID, 'autoLock', {
                 name: 'Auto-Lock on Startup',
@@ -170,6 +181,21 @@ window.TableFlowScenePrep.Settings = class {
      */
     static async setLockoutMessage(message) {
         await game.settings.set(this.MODULE_ID, 'lockoutMessage', message);
+    }
+
+    static getLockScreenBackground() {
+        const background = game.settings.get(this.MODULE_ID, 'lockScreenBackground');
+        if (background === 'dark' || background === 'dice') return background;
+        console.warn('Table Flow - Scene Prep | Invalid lock screen background:', background);
+        return 'dark';
+    }
+
+    static async setLockScreenBackground(background) {
+        if (!game.user.isGM) throw new Error('Only a GM can change the lock screen background.');
+        if (background !== 'dark' && background !== 'dice') {
+            throw new Error('Choose a built-in lock screen background.');
+        }
+        await game.settings.set(this.MODULE_ID, 'lockScreenBackground', background);
     }
     
     /**

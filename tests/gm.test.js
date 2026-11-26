@@ -120,6 +120,8 @@ test('GM panel: Save Settings validates and applies every field', async () => {
     $('setting-auto-lock').checked = true;
     $('setting-button-anchor').value = 'bottom-left';
     $('setting-lock-indicator').value = 'compact';
+    assert.deepEqual([...$('setting-lock-background').options].map(option => option.value), ['dark', 'dice']);
+    $('setting-lock-background').value = 'dice';
     $('setting-lock-tips-title').value = 'Fun Facts';
     $('setting-lock-tips').value = '• First\n- Second\n3. Third\n\n';
     $('save-settings-button').click();
@@ -129,9 +131,23 @@ test('GM panel: Save Settings validates and applies every field', async () => {
     assert.equal(Settings.getAutoLock(), true);
     assert.equal(Settings.getButtonAnchor(), 'bottom-left');
     assert.equal(Settings.getLockIndicator(), 'compact');
+    assert.equal(Settings.getLockScreenBackground(), 'dice');
     assert.equal(Settings.getLockScreenTipsTitle(), 'Fun Facts');
     assert.deepEqual([...Settings.getLockScreenTips()], ['First', 'Second', 'Third']);
     assert.ok(env.notifications.some(([, m]) => m === 'Settings saved'));
+    GMInterface.toggleSettings();
+    GMInterface.toggleSettings();
+    assert.equal($('setting-lock-background').value, 'dice');
+});
+
+test('GM panel: background save failures are reported without a success notification', async () => {
+    const env = setup();
+    env.tfsp.GMInterface.show();
+    env.tfsp.GMInterface.toggleSettings();
+    env.tfsp.Settings.setLockScreenBackground = async () => { throw new Error('Write denied'); };
+    await env.tfsp.GMInterface._handleSaveSettings();
+    assert.ok(env.notifications.some(([type, message]) => type === 'error' && message.includes('Write denied')));
+    assert.equal(env.notifications.some(([, message]) => message === 'Settings saved'), false);
 });
 
 test('GM panel: Save Message stores and broadcasts a non-empty message, ignores an empty one', async () => {

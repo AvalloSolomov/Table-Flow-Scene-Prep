@@ -6,6 +6,7 @@
 window.TableFlowScenePrep = window.TableFlowScenePrep || {};
 
 window.TableFlowScenePrep.PlayerOverlay = class {
+    static EXTENSION_API_VERSION = 1;
     static OVERLAY_ID = 'table-flow-scene-prep-overlay';
     static TIP_ROTATE_MS = 10000;
     static TIP_FADE_MS = 400;
@@ -38,9 +39,18 @@ window.TableFlowScenePrep.PlayerOverlay = class {
         overlay.innerHTML = this._generateOverlayHTML(displayMessage, currentPlayer, otherWaitingPlayers, playerInfo.onlineCount, journalContent, tips);
         
         document.body.appendChild(overlay);
+        this.refreshBackground();
+        Hooks.callAll('tableFlowScenePrepRenderPlayerOverlay', overlay);
         this._startTipRotation(tips);
         // Presence can still be settling when a client first loads
         setTimeout(() => this.refreshPlayers(), 1500);
+    }
+
+    static refreshBackground() {
+        const overlay = document.getElementById(this.OVERLAY_ID);
+        if (!overlay) return;
+        overlay.classList.toggle('tfsp-builtin-dice-background',
+            window.TableFlowScenePrep.Settings.getLockScreenBackground() === 'dice');
     }
     
     /**
@@ -54,7 +64,7 @@ window.TableFlowScenePrep.PlayerOverlay = class {
         const others = playerInfo.online.filter(u => u.id !== game.user.id);
 
         const pill = overlay.querySelector('.tfsp-connected-players-pill');
-        if (pill) pill.textContent = `${playerInfo.onlineCount} Connected`;
+        if (pill) pill.textContent = `${playerInfo.onlineCount}`;
 
         const card = overlay.querySelector('.tfsp-player-count');
         if (!card) return;
@@ -89,7 +99,7 @@ window.TableFlowScenePrep.PlayerOverlay = class {
         if (!tips.length) return;
         
         this._resetTipQueue(tips);
-        overlay.querySelector('.tfsp-overlay-footer')?.insertAdjacentHTML('beforebegin', this._generateTipHTML(tips));
+        overlay.querySelector('.tfsp-overlay-panel')?.insertAdjacentHTML('beforeend', this._generateTipHTML(tips));
         this._startTipRotation(tips);
     }
     
@@ -195,7 +205,9 @@ window.TableFlowScenePrep.PlayerOverlay = class {
             existing.outerHTML = journalHTML;
         } else {
             // The tips text sits between the journal and the footer, so the journal goes before whichever comes first
-            overlay.querySelector('.tfsp-overlay-tip, .tfsp-overlay-footer')?.insertAdjacentHTML('beforebegin', journalHTML);
+            const tip = overlay.querySelector('.tfsp-overlay-tip');
+            if (tip) tip.insertAdjacentHTML('beforebegin', journalHTML);
+            else overlay.querySelector('.tfsp-overlay-panel')?.insertAdjacentHTML('beforeend', journalHTML);
         }
     }
     
@@ -227,44 +239,43 @@ window.TableFlowScenePrep.PlayerOverlay = class {
             <div class="tfsp-overlay-card">
                 <!-- Content layer -->
                 <div class="tfsp-overlay-content">
-                    <!-- Bordered intro card: icon, title, description -->
+                    <div class="tfsp-overlay-panel">
+                    <!-- Intro: icon, title, description, and your connection status -->
                     <div class="tfsp-overlay-intro">
                         <div class="tfsp-lock-icon-box">
                             <i class="tfsp-icon tfsp-icon-lock" aria-hidden="true"></i>
                         </div>
-                        <h2 class="tfsp-overlay-title">Session Paused</h2>
-                        <p class="tfsp-overlay-message">${window.TableFlowScenePrep.DOMHelpers.escapeHTML(message)}</p>
-                    </div>
-                    
-                    <!-- Connected players -->
-                    <div class="tfsp-connected-players-header">
-                        <div class="tfsp-connected-players-title">
-                            <i class="tfsp-icon tfsp-icon-users" aria-hidden="true"></i>
-                            <span>Connected Players</span>
+                        <div class="tfsp-overlay-intro-text">
+                            <h2 class="tfsp-overlay-title">Session Paused</h2>
+                            <p class="tfsp-overlay-message">${window.TableFlowScenePrep.DOMHelpers.escapeHTML(message)}</p>
                         </div>
-                        <div class="tfsp-connected-players-pill">${totalWaiting} Connected</div>
-                    </div>
-                    <div class="tfsp-player-info">
                         <div class="tfsp-player-card tfsp-player-you">
                             <div class="tfsp-player-status">
                                 <div class="tfsp-status-dot tfsp-status-online"></div>
                                 <span>You're Connected</span>
                             </div>
-                            <div class="tfsp-player-name">${window.TableFlowScenePrep.DOMHelpers.escapeHTML(currentPlayer.name)}</div>
+                            <div class="tfsp-player-name tfsp-sr-only">${window.TableFlowScenePrep.DOMHelpers.escapeHTML(currentPlayer.name)}</div>
                         </div>
-                        
+                    </div>
+
+                    <div class="tfsp-overlay-divider" aria-hidden="true"><span></span></div>
+
+                    <!-- Connected players -->
+                    <div class="tfsp-connected-players-header">
+                        <div class="tfsp-connected-players-title">Connected Players</div>
+                        <div class="tfsp-connected-players-pill">${totalWaiting}</div>
+                    </div>
+                    <div class="tfsp-player-info">
                         <div class="tfsp-player-card tfsp-player-count">
-                            <div class="tfsp-player-status">
-                                <div class="tfsp-status-dot tfsp-status-waiting"></div>
-                                <span>Players Waiting</span>
-                            </div>
                             ${otherNamesHTML || '<div class="tfsp-player-name">Just you</div>'}
                         </div>
                     </div>
                     
-                    ${this._generateJournalHTML(journalContent)}
+                    <div class="tfsp-overlay-divider" aria-hidden="true"><span></span></div>
+                                        ${this._generateJournalHTML(journalContent)}
                     
                     ${this._generateTipHTML(tips)}
+                    </div>
                     
                     <!-- Footer branding -->
                     <div class="tfsp-overlay-footer">
